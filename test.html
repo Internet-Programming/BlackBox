@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <title>Internet-Programming</title>
+
+        <style>
+            * {background-color : #ffffff;   color : blue;}
+            div {position:fixed;    text-align : center;   background-color : white;   font-size : 50px;   top:10%;left:25%;}
+        </style>
+    </head>
+
+    
+    <body>
+        <div>
+            <p id="text">BLACKBOX</p><br>
+            
+            <input   id="userInfo" type="text" ></input>    <br>
+            
+            <!--<button>Sign Up</button>-->
+            <button onClick='signIn(); return false;'>Sign In</button>
+        </div>
+    
+    
+    <script>
+        
+        var isIDset = false;
+        
+        function userInfo(){
+         
+            this.ID = "";
+            this.PW = "";
+            
+        }
+        
+        
+        var user = new userInfo();
+        
+        function signIn(){
+                        
+            var Info = document.getElementById("userInfo");
+            var test = document.getElementById("text");
+
+            if(!isIDset){
+            user.ID=Info.value;
+            //alert(user.ID);
+            test.innerHTML = "Enter the Password";
+            Info.type="password";  
+            Info.value="";
+            isIDset = true;
+            }
+            else{
+            user.PW=Info.value;
+            //alert(user.PW);
+            test.innerHTML = "submitting";
+            Info.type="text";
+            isIDset = false;
+                
+            var jsontext = JSON.stringify(user);
+            alert(jsontext);
+            open();
+            send(jsontext);
+            quit();
+            }
+                            
+        }
+        
+        var Socket = new WebSocket("ws://echo.websocket.org");
+
+        function open () {
+        
+        if("WebSocket" in window) {
+            Socket.onopen = function () { alert("웹 소켓 오픈 성공");  };
+            Socket.onclose = function () { alert("웹 소켓 연결 불가");  };
+         }
+        else{ alert("웹 소켓이 지원되지 않음!");  }
+                    
+        }
+        
+        function send (userData) { Socket.send(userData);}
+        function quit() { Socket.close();   }
+        
+    </script>
+    
+    </body>
+
+</html>

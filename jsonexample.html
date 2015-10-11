@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+    <script src="http://code.jquery.com/jquery-2.1.4.min.js" type="text/javascript"></script>
+    <head>
+        <title>Internet-Programming</title>
+
+        <style>
+            * {background-color : #ffffff;   color : blue;}
+            div {position:fixed;    text-align : center;   background-color : white;   font-size : 50px;   top:10%;left:25%;}
+        </style>
+    </head>
+
+    
+    <body>
+        <div>
+            <p id="text">BLACKBOX</p><br>
+            
+            <input   id="userInfo" type="text" ></input>    <br>
+            
+            <!--<button>Sign Up</button>-->
+            <button onClick='signIn(); return false;'>Sign In</button>
+        </div>
+    
+    
+    <script type="text/javascript">
+        
+        var js = {"a":1, "b":2, "c":3};  // json 객체 생성하기
+        $.post(
+            "jsonexample.php"
+            ,{"js":js}
+            ,function(data) {
+            var rtn_json = $.parseJSON(data);  // 데이터를 JSON으로 파싱
+            if(rtn_json['result']) {
+            alert(rtn_json['data']);
+            } else {
+            alert('실패');
+            }
+            }
+        );
+        
+    </script>
+    
+    </body>
+
+</html>

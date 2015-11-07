@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+
+    <script src="jquery-2.1.4.min.js" type="text/javascript"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <head>
+    <script type="text/javascript">
+    function SignUp () {
+
+
+        var js = {"Num":$("#Num").val(), "PW":$("#PW").val()};  // json 객체 생성하기
+        $.post(
+            "SignUp.php"
+            ,js
+            ,function(data) {
+                console.log(data);
+                var rtn_json = jQuery.parseJSON(data);  // 데이터를 JSON으로 파싱
+                if(rtn_json['result']) {
+                    alert(rtn_json['data']);
+                } else {
+                    alert('실패');
+                }
+                
+            }
+        );
+    }
+    </script>
+    </head>
+
+    <body>
+        <div>
+            <p id="text">BLACKBOX</p><br>
+            
+            <input   id="Num" type="text" ></input>    <br>
+            <input   id="PW" type="text" ></input>    <br>
+            
+            <!--<button>Sign Up</button>-->
+            <button onClick='SignUp()'>Sign Up</button>
+        </div>
+    
+    
+    
+    
+    </body>
+
+</html>

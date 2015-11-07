@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">BlackBox</string>
+    <string name="textSignUp">회원가입</string>
+    <string name="textSignIn">로그인</string>
+    <string name="textVehicleNumber">차량 번호</string>
+    <string name="textVehiclePassword">비밀 번호</string>
+</resources>

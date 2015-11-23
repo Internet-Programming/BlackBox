@@ -5,13 +5,20 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <head>
     <script type="text/javascript">
+    var test = {"Num":$("#Num").val(), "PW":$("#PW").val()};  // json 객체 생성하기
+
+        console.log(test);
+        console.log("\"Num\":\"테스트\",\"PW\":\"pass\"");
     function SignUp () {
 
 
         var js = {"Num":$("#Num").val(), "PW":$("#PW").val()};  // json 객체 생성하기
+
+        console.log(js.toString());
+        var stringTest = "\"Num\":\"테스트\",\"PW\":\"pass\"";
         $.post(
             "SignUp.php"
-            ,js
+            ,stringTest
             ,function(data) {
                 console.log(data);
                 var rtn_json = jQuery.parseJSON(data);  // 데이터를 JSON으로 파싱

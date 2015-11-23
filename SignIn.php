@@ -1,9 +1,9 @@
 <?php 
 require (__DIR__.'/DBConnect.php');
+$data =json_decode(file_get_contents('php://input'),true);
 
-
-$carNumber = $_POST['Num'];
-$password = $_POST['PW'];
+$carNumber = $data['Num'];
+$password = $data['PW'];
 
 $DBconn = connectDB();
 

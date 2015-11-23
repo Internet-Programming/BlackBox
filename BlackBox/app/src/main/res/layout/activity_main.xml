@@ -60,7 +60,7 @@
         android:id="@+id/textView2"
         android:layout_gravity="center_horizontal"
         android:textSize="22sp"
-        android:layout_centerVertical="true"
+        android:layout_above="@+id/VehiclePassword"
         android:layout_alignParentStart="true" />
 
     <EditText
@@ -70,11 +70,11 @@
         android:ems="10"
         android:id="@+id/VehiclePassword"
         android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/textView2"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
 
-        android:imeOptions="flagNoExtractUi"/>
+        android:imeOptions="flagNoExtractUi"
+        android:layout_above="@+id/buttonSignUp"
+        android:layout_alignParentStart="true"
+        android:layout_alignEnd="@+id/VehicleNumber" />
 
     <Button
         android:layout_width="wrap_content"
@@ -83,7 +83,7 @@
         android:id="@+id/buttonSignUp"
         android:layout_gravity="center_horizontal"
         android:textSize="18sp"
-        android:layout_below="@+id/VehiclePassword"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true" />
 
     <Button
@@ -93,15 +93,7 @@
         android:text="@string/textSignIn"
         android:layout_gravity="center_horizontal"
         android:textSize="18sp"
-        android:layout_below="@+id/VehiclePassword"
+        android:layout_alignTop="@+id/buttonSignUp"
         android:layout_alignEnd="@+id/VehiclePassword" />
-
-    <Space
-        android:layout_width="10dp"
-        android:layout_height="10dp"
-        android:layout_above="@+id/textView2"
-        android:layout_toEndOf="@+id/VehiclePassword"
-        android:layout_below="@+id/VehicleNumber"
-        android:layout_alignParentStart="true" />
 
 </RelativeLayout>

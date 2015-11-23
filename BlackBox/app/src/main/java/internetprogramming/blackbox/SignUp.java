@@ -10,9 +10,12 @@ import android.widget.EditText;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -49,43 +52,63 @@ public class SignUp extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try {
-                    userInfo.put("Num", inputVNumber.toString());
-                    userInfo.put("PW", inputVPassword.toString());
+                    userInfo.put("Num", inputVNumber.getText().toString());
+                    userInfo.put("PW", inputVPassword.getText().toString());
 
-                    executeClient(userInfo);
+                    System.out.println(userInfo.toString());
+
+                    RegisterTask rt = new RegisterTask();
+                    rt.execute(userInfo);
 
                 } catch (JSONException e) {
+                    e.printStackTrace();
                 }
             }
         });
 
     }
-
+/*
     public void executeClient(JSONObject job) {
 
         try {
             URL url = new URL("http://min.esy.es/SignUp.php");                //url 지정
-            OutputStream oS = null;
-            //InputStream iS = null;
 
             //커넥션 오픈
             HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-            huc.setRequestMethod("POST");//POST
-            //InputStream 으로 서버로부터 응답 헤더와 메시지를 읽어들인다.
-            //huc.setDoInput(true);
-            //OutputStream 으로 서버에 POST 데이터를 넘겨주겠다.
             huc.setDoOutput(true);
+            huc.setDoInput(true);
+            huc.setRequestProperty("Content-Type", "application/json");
+            huc.setRequestProperty("Accept", "application/json");
+            //huc.setRequestProperty("Cache-Control", "no-cache");
+            huc.setRequestMethod("POST");//POST
 
-            huc.setRequestProperty("Cache-Control", "no-cache");
-            huc.setRequestProperty("Content-Type","application/json");
-            huc.setRequestProperty("Accept","application/json");
+            OutputStream oS = huc.getOutputStream();
+            OutputStreamWriter wr = new OutputStreamWriter(oS);
+            wr.write(job.toString());
+            wr.flush();
 
-            oS = huc.getOutputStream();
-            oS.write(job.toString().getBytes());
-            oS.flush();
+            //display what returns the POST request
+
+            StringBuilder sb = new StringBuilder();
+            int HttpResult = huc.getResponseCode();
+            if(HttpResult == HttpURLConnection.HTTP_OK){
+                InputStream iS = huc.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(iS,"utf-8")) ;
+                String line = null;
+                while ( (line = br.readLine() ) != null){
+                    sb.append(line + "\n");
+                }
+                br.close();
+
+                System.out.println(""+sb.toString());
+            }
+            else{
+                System.out.println(huc.getResponseMessage());
+            }
         }
         catch(MalformedURLException e){}
         catch(IOException e){}
 
     }
+ */
 }

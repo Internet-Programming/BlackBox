@@ -7,6 +7,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Main extends AppCompatActivity {
 
     private EditText inputVNumber;      //차량번호
@@ -29,13 +32,24 @@ public class Main extends AppCompatActivity {
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent it = new Intent(getApplicationContext(), SignIn.class);
+                //intent it = new Intent(getApplicationContext(), SignIn.class);
+                try{
+                    JSONObject userInfo = new JSONObject();
 
-                it.putExtra("VehicleNumber", inputVNumber.getText());
-                it.putExtra("VehiclePassword", inputVPassword.getText());
+                    userInfo.put("Num", inputVNumber.getText().toString());
+                    userInfo.put("PW", inputVPassword.getText().toString());
 
-                startActivity(it);
-                finish();
+
+                    System.out.println(userInfo.toString());
+
+                    SignTask st = new SignTask();
+                    st.execute(userInfo);
+                }
+                catch(JSONException e){
+                    e.printStackTrace();
+                }
+//                startActivity(it);
+  //              finish();
             }
         });
 

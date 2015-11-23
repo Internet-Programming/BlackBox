@@ -13,6 +13,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 
 /**
@@ -49,29 +50,20 @@ public class RegisterTask extends AsyncTask<JSONObject,JSONObject,String>{
 
             huc.setDoOutput(true);
             huc.setDoInput(true);
-            huc.setDefaultUseCaches(false);
-
-            OutputStream output = huc.getOutputStream();
-            output.write(job[0].toString().getBytes());
-            output.flush();
             /*서버로 값 전송 - Output Stream Writer*/
-            /*
+
             OutputStreamWriter osw = new OutputStreamWriter(huc.getOutputStream());
             StringBuffer sbW = new StringBuffer(job[0].toString());
-            String temp = null;
-
-            temp = sbW.toString();
-
-            System.out.println(temp);
-
-            if(temp instanceof String){
-                System.out.println("Is String!");
-            }
 
 
+
+            OutputStream os = huc.getOutputStream();
+
+            huc.connect();
             osw.write(job[0].toString());
             osw.flush();
-    */
+
+
             /*서버로부터 받기 - Input Stream Read=er*/
             int HttpResult = huc.getResponseCode();
             if(HttpResult == HttpURLConnection.HTTP_OK){
@@ -91,7 +83,7 @@ public class RegisterTask extends AsyncTask<JSONObject,JSONObject,String>{
             }
 
     /*통신 여부 확인 보내기 등등*/
-
+            huc.disconnect();
             return response;
         }
         catch (IOException e) {

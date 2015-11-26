@@ -3,6 +3,8 @@ package internetprogramming.blackbox;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
@@ -76,7 +78,13 @@ public class RegisterTask extends AsyncTask<JSONObject,JSONObject,String>{
                 }
                 br.close();
 
-                System.out.println(""+sbR.toString());
+                /*2015.11.27 01:00 이부분이다*/
+                String jsonStr = sbR.toString();
+                System.out.println(jsonStr);
+                JSONArray jsonArr = new JSONArray(jsonStr);
+                System.out.println(jsonArr);
+                /* ****************************/
+
             }
             else{
                 System.out.println(huc.getResponseMessage());
@@ -89,6 +97,10 @@ public class RegisterTask extends AsyncTask<JSONObject,JSONObject,String>{
         catch (IOException e) {
             e.printStackTrace();
         }
+        catch (JSONException e){
+            e.printStackTrace();
+        }
+
 
         return null;
     }

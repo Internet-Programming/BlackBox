@@ -67,48 +67,4 @@ public class SignUp extends AppCompatActivity {
         });
 
     }
-/*
-    public void executeClient(JSONObject job) {
-
-        try {
-            URL url = new URL("http://min.esy.es/SignUp.php");                //url 지정
-
-            //커넥션 오픈
-            HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-            huc.setDoOutput(true);
-            huc.setDoInput(true);
-            huc.setRequestProperty("Content-Type", "application/json");
-            huc.setRequestProperty("Accept", "application/json");
-            //huc.setRequestProperty("Cache-Control", "no-cache");
-            huc.setRequestMethod("POST");//POST
-
-            OutputStream oS = huc.getOutputStream();
-            OutputStreamWriter wr = new OutputStreamWriter(oS);
-            wr.write(job.toString());
-            wr.flush();
-
-            //display what returns the POST request
-
-            StringBuilder sb = new StringBuilder();
-            int HttpResult = huc.getResponseCode();
-            if(HttpResult == HttpURLConnection.HTTP_OK){
-                InputStream iS = huc.getInputStream();
-                BufferedReader br = new BufferedReader(new InputStreamReader(iS,"utf-8")) ;
-                String line = null;
-                while ( (line = br.readLine() ) != null){
-                    sb.append(line + "\n");
-                }
-                br.close();
-
-                System.out.println(""+sb.toString());
-            }
-            else{
-                System.out.println(huc.getResponseMessage());
-            }
-        }
-        catch(MalformedURLException e){}
-        catch(IOException e){}
-
-    }
- */
 }

@@ -3,11 +3,14 @@ package internetprogramming.blackbox;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -47,21 +50,21 @@ public class SignTask extends AsyncTask<JSONObject,JSONObject,String>{
 
             huc.setDoOutput(true);
             huc.setDoInput(true);
-
             /*서버로 값 전송 - Output Stream Writer*/
+
             OutputStreamWriter osw = new OutputStreamWriter(huc.getOutputStream());
             StringBuffer sbW = new StringBuffer(job[0].toString());
-            String temp = null;
 
-            temp = sbW.toString();
 
-            System.out.println(temp);
 
-            if(temp instanceof String){
-                System.out.println("Is String!");
-            }
+            OutputStream os = huc.getOutputStream();
 
-            /*서버로부터 받기 - Input Stream Reader*/
+            huc.connect();
+            osw.write(job[0].toString());
+            osw.flush();
+
+
+            /*서버로부터 받기 - Input Stream Read=er*/
             int HttpResult = huc.getResponseCode();
             if(HttpResult == HttpURLConnection.HTTP_OK){
                 InputStreamReader isr = new InputStreamReader(huc.getInputStream());
@@ -73,17 +76,26 @@ public class SignTask extends AsyncTask<JSONObject,JSONObject,String>{
                 }
                 br.close();
 
-                System.out.println(""+sbR.toString());
+                String jsonStr = sbR.toString();
+
+                System.out.println(jsonStr);
+
+                JSONArray jsonArr = new JSONArray(jsonStr);
+
+                System.out.println(jsonArr);
             }
             else{
                 System.out.println(huc.getResponseMessage());
             }
 
     /*통신 여부 확인 보내기 등등*/
-
+            huc.disconnect();
             return response;
         }
         catch (IOException e) {
+            e.printStackTrace();
+        }
+        catch (JSONException e){
             e.printStackTrace();
         }
 

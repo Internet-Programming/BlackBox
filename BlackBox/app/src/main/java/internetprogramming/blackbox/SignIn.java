@@ -21,10 +21,5 @@ public class SignIn extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        Intent intent = getIntent();
-        String VehicleName = intent.getExtras().getString("VehicleName");
-        String VehiclePassword = intent.getExtras().getString("VehiclePassword");
-
-
     }
 }

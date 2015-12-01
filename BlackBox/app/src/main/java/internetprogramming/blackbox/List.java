@@ -76,6 +76,7 @@ public class List extends AppCompatActivity {
             }
         });
 
+<<<<<<< HEAD
         JSONObject userInfo = new JSONObject();
 
         try {
@@ -92,11 +93,16 @@ public class List extends AppCompatActivity {
         }
 
 
+=======
+>>>>>>> 13b24bb56ab96a1e5df16dff79c2e312f5c76e51
         adapter.add("잘 될까?");
         adapter.add("안 될까?");
-
-
-
+        adapter.add("잘 될까?");
+        adapter.add("안 될까?");
+        adapter.add("잘 될까?");
+        adapter.add("안 될까?");
+        adapter.add("잘 될까?");
+        adapter.add("안 될까?");
     }
 
     /*Subclass (ASYNCTASK) */

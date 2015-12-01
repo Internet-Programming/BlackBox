@@ -1,5 +1,8 @@
 package internetprogramming.blackbox;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -64,12 +67,28 @@ public class SignUp extends AppCompatActivity {
                     RegisterTask rt = new RegisterTask();
                     isSuccess = rt.execute(userInfo).get();
 
+
+                    AlertDialog.Builder alert = new AlertDialog.Builder(SignUp.this);
+
                     if(isSuccess){
                         /*회원가입 성공*/
-                        System.out.println("Success");
+                        alert.setMessage("회원가입에 성공하였습니다.");
+                        alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        finish();
+                                    }
+                                }
+                        );
+
+                        alert.show();
+
                     }
                     else if(!isSuccess){
                         /*회원가입 실패*/
+                        alert.setMessage("이미 존재하는 회원입니다.");
+                        alert.setPositiveButton("확인",null);
+
+                        alert.show();
                         System.out.println("Failed");
                     }
 
@@ -88,17 +107,20 @@ public class SignUp extends AppCompatActivity {
     /*Subclass <ASYNCTASK>*/
     public class RegisterTask extends AsyncTask<JSONObject,JSONObject,Boolean> {
 
-        // 스레드가 동작하기 전, 초기화등의 작업에 사용하면 유용
-        // @이 메서드는 메인스레드에 의해 수행된다!@
-        // @UI 제어 가능@
+        ProgressDialog dialog = new ProgressDialog(SignUp.this) ;
+
         @Override
         protected void onPreExecute(){
+
+            this.dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            this.dialog.setTitle("");
+            this.dialog.setMessage("로그인 중입니다.");
+            this.dialog.setCancelable(false);
+
+            this.dialog.show();
             super.onPreExecute();
         }
 
-        // 하위 스레드에 의해 동작하는 메서드
-        // 메인 스레드와는 독립적으로 수행 할 영역은 이 메서드를 이용한다.
-        // @UI 제어 불가@
 
         @Override
         protected Boolean doInBackground(JSONObject[] job){
@@ -186,6 +208,9 @@ public class SignUp extends AppCompatActivity {
         // doInBackground() 메서드의 수행이 모두 완료되면,
         // doInBackground() 메서드의 리턴값이 여기의 파라미터로 반환된다
         protected void onPostExecute(Boolean result) {
+            if(this.dialog != null && this.dialog.isShowing() ){
+                this.dialog.dismiss();
+            }
             super.onPostExecute(result);
         }
     }

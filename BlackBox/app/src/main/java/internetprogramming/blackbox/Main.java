@@ -1,5 +1,7 @@
 package internetprogramming.blackbox;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -64,6 +66,12 @@ public class Main extends AppCompatActivity {
                     }
                     else if(!isSuccess){
                         /*로그인 실패*/
+
+                        AlertDialog.Builder alert = new AlertDialog.Builder(Main.this);
+
+                        alert.setMessage("잘못된 회원 정보입니다.");
+                        alert.setPositiveButton("확인",null);
+                        alert.show();
                         System.out.println("Failed");
                     }
 
@@ -83,7 +91,6 @@ public class Main extends AppCompatActivity {
             public void onClick(View v) {
                 Intent it = new Intent(getApplicationContext(), SignUp.class);
                 startActivity(it);
-                finish();
             }
         });
     }
@@ -91,17 +98,21 @@ public class Main extends AppCompatActivity {
     /*Subclass (ASYNCTASK) */
     public class SignTask extends AsyncTask<JSONObject,JSONObject,Boolean> {
 
-        // 스레드가 동작하기 전, 초기화등의 작업에 사용하면 유용
-        // @이 메서드는 메인스레드에 의해 수행된다!@
-        // @UI 제어 가능@
+        ProgressDialog dialog = new ProgressDialog(Main.this) ;
+
+
         @Override
         protected void onPreExecute() {
-            super.onPreExecute();
-        }
 
-        // 하위 스레드에 의해 동작하는 메서드
-        // 메인 스레드와는 독립적으로 수행 할 영역은 이 메서드를 이용한다.
-        // @UI 제어 불가@
+            this.dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            this.dialog.setTitle("");
+            this.dialog.setMessage("로그인 중입니다.");
+            this.dialog.setCancelable(false);
+
+            this.dialog.show();
+            super.onPreExecute();
+
+        }
 
         @Override
         protected Boolean doInBackground(JSONObject[] job) {
@@ -124,8 +135,6 @@ public class Main extends AppCompatActivity {
 
                 OutputStreamWriter osw = new OutputStreamWriter(huc.getOutputStream());
                 StringBuffer sbW = new StringBuffer(job[0].toString());
-
-
                 OutputStream os = huc.getOutputStream();
 
                 huc.connect();
@@ -151,6 +160,7 @@ public class Main extends AppCompatActivity {
 
 
                     if ((jsonObj.getJSONObject("data")).getBoolean("success") == false) {
+
                         return false;
                     } else {
                         return true;
@@ -172,19 +182,17 @@ public class Main extends AppCompatActivity {
             return null;
         }
 
-        // 개발자가 정의한 스레드가 doInBackground() 메서드를 수행하는 동안
-        // 중간 중간에 UI를 제어하는 등의 작업이 가능!
-        // @이 메서드는 메인스레드에 의해 수행된다!@
-        // @UI 제어 가능@
-
         protected void onProgressUpdate(JSONObject[] values) {
             super.onProgressUpdate(values);
         }
 
-        // doInBackground() 메서드의 수행이 모두 완료되면,
-        // doInBackground() 메서드의 리턴값이 여기의 파라미터로 반환된다
+
         protected void onPostExecute(Boolean result) {
+            if(this.dialog != null && this.dialog.isShowing() ){
+                this.dialog.dismiss();
+            }
             super.onPostExecute(result);
+
         }
     }
 

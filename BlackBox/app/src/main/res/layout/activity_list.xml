@@ -10,12 +10,13 @@
 
     tools:context="internetprogramming.blackbox.List">
 
-    <TextView
+    <ListView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="List"
-        android:id="@+id/textView4"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true" />
+        android:divider="@color/colorAccent"
+        android:dividerHeight="1.5dp"
+        android:choiceMode="singleChoice"
+        android:id="@+id/listView"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>

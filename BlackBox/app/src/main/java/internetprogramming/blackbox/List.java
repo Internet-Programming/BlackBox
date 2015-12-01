@@ -12,6 +12,17 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+/*
+{
+	"data" = [
+		{"URI" = "root/video/동영상 1.mp4"
+		"fileName" = "동영상 1.mp4"},
+		{"URI" = "root/video/동영상 2.mp4"
+		"fileName" = "동영상 2.mp4"}
+	]
+}
+ */
+
 public class List extends AppCompatActivity {
     @Override
     public void onBackPressed(){

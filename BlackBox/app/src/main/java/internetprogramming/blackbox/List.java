@@ -41,17 +41,19 @@ public class List extends AppCompatActivity {
             //네번재 파리미터 : 클릭된 아이템의 아이디(특별한 설정이 없다면 세번째 파라이터인 position과 같은 값)
 
             @Override
-           public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 System.out.println(position);
             }
         });
 
-
         adapter.add("잘 될까?");
         adapter.add("안 될까?");
-
-
-
+        adapter.add("잘 될까?");
+        adapter.add("안 될까?");
+        adapter.add("잘 될까?");
+        adapter.add("안 될까?");
+        adapter.add("잘 될까?");
+        adapter.add("안 될까?");
     }
 
 }

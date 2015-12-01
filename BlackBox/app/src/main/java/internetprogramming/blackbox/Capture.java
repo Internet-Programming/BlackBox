@@ -3,6 +3,7 @@ package internetprogramming.blackbox;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -26,9 +27,6 @@ public class Capture extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capture);
 
-
-
-
         dialog = ProgressDialog.show(Capture.this, "", "Uploading file....", true);
 
         String isSuccess = null;
@@ -44,5 +42,10 @@ public class Capture extends AppCompatActivity {
         }
         System.out.println(isSuccess);
         dialog.dismiss();
+
+        /*카메라 불러오기 테스트*/
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }

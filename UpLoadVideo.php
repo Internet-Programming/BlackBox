@@ -1,6 +1,6 @@
 <?php
 	require (__DIR__.'/DBConnect.php');
-	
+
 	$rtn = array();
 	$rtn['result'] = true;
 	$rtn['data'] = array();
@@ -14,6 +14,6 @@
 		$rtn['data']['success'] = false;
 	}
 
-	ehco json_encode($rtn,JSON_UNESCAPED_UNICODE);
+	echo json_encode($rtn,JSON_UNESCAPED_UNICODE);
 	exit;
 ?>

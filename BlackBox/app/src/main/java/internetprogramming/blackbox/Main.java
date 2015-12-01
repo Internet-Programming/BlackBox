@@ -30,6 +30,8 @@ public class Main extends AppCompatActivity {
     private Button btnSignUp;           //회원가입
     private Button btnSignIn;           //로그인
 
+    static String CARNUMBER;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,6 +63,7 @@ public class Main extends AppCompatActivity {
                         /*로그인 성공*/
                         System.out.println("Success");
                         Intent cit = new Intent(getApplicationContext(), SignIn.class);
+                        CARNUMBER = userInfo.getString("Num");
                         startActivity(cit);
                         finish();
                     }

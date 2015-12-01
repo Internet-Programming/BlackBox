@@ -7,7 +7,7 @@ $password = $data['PW'];
 
 $DBconn = connectDB();
 
-$result = selectInfoData ($DBconn, $carNumber, $password);
+$result = selectInfoDataSignIn ($DBconn, $carNumber, $password);
 
 
 closeDB($DBconn);

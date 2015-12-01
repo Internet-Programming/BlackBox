@@ -12,7 +12,7 @@ $password = $rtn['data']['PW'];
 
 $DBconn = connectDB();
 
-$result = selectInfoData ($DBconn, $carNumber, $password);
+$result = selectInfoDataSignUp ($DBconn, $carNumber, $password);
 
 
 

@@ -38,12 +38,20 @@ function selectAllDataTable ($connect, $table) {
 	return mysqli_query($connect, "select * from ".$table);
 }
 
-function selectInfoData ($connect, $carNumber, $password) {
+function selectInfoDataSignUp ($connect, $carNumber, $password) {
 	//print "select * from clientInfo WHERE CarNumber = '". $carNumber. "' AND password = '". $password."'";
-	//return mysql_query("select * from clientInfo WHERE CarNumber = '". $carNumber. "' AND password = '". $password."';");
+	//return mysqli_query("select * from clientInfo WHERE CarNumber = '". $carNumber. "' AND password = '". $password."';");
 	return mysqli_query($connect, "select * from clientInfo WHERE CarNumber = '". $carNumber. "';");
 }
 
+function selectInfoDataSignIn ($connect, $carNumber, $password) {
+	//print "select * from clientInfo WHERE CarNumber = '". $carNumber. "' AND password = '". $password."'";
+	return mysqli_query($connect, "select * from clientInfo WHERE CarNumber = '". $carNumber. "' AND password = '". $password."';");
+}
+
+function insertVideoUri ($connect, $carNumber, $uri) {
+	mysqli_query($connect, "INSERT INTO VideoList (CarNumber, URI) VALUES('".$carNumber."','".$uri."')");
+}
 
 /*
 connectDB();

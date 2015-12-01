@@ -5,4 +5,6 @@
     <string name="textSignIn">로그인</string>
     <string name="textVehicleNumber">차량 번호</string>
     <string name="textVehiclePassword">비밀 번호</string>
+    <string name="capture">capture</string>
+    <string name="list">list</string>
 </resources>

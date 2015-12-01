@@ -7,13 +7,13 @@ $password = $data['PW'];
 
 $DBconn = connectDB();
 
-$result = selectInfoData ($carNumber, $password);
+$result = selectInfoData ($DBconn, $carNumber, $password);
 
 
 closeDB($DBconn);
 
 $i = 0;
-while($data = mysql_fetch_array($result)) {
+while($data = mysqli_fetch_array($result)) {
 	$i++;
 }
 
@@ -29,7 +29,7 @@ if ($i > 0) {
 }
 
 
-echo json_encode($rtn);
+echo json_encode($rtn,JSON_UNESCAPED_UNICODE);
 exit;
 
  ?>

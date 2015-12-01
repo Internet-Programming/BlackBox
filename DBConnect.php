@@ -8,12 +8,12 @@ function connectDB () {
 	$username = "u762849870_min";
 	$password = "2012920020";
 	$dbname = "u762849870_min";
-	//Connect DB
-	$connect = mysql_connect($hostname,$username,$password) or die("DB접속에러");
+	//Connect DB &
+	$connect = mysqli_connect($hostname,$username,$password,$dbname) or die("DB접속에러");
 	//$connect = mysql_connect('localhost','root','mks295') or die("DB접속에러");
 
 	//Select DB
-	$result = mysql_select_db($dbname, $connect) or die("DB선택에러");
+	//$result = mysql_select_db($dbname, $connect) or die("DB선택에러");
 
 	/*
 	if(!$result) 
@@ -27,20 +27,21 @@ function connectDB () {
 }
 
 function closeDB ($connect) {
-	mysql_close($connect);
+	mysqli_close($connect);
 }
 
-function insertInfoData ($carNumber, $password) {
-	mysql_query("INSERT INTO clientInfo VALUES('".$carNumber."','".$password."')");
+function insertInfoData ($connect, $carNumber, $password) {
+	mysqli_query($connect, "INSERT INTO clientInfo VALUES('".$carNumber."','".$password."')");
 }
 
-function selectAllDataTable ($table) {
-	return mysql_query("select * from ".$table);
+function selectAllDataTable ($connect, $table) {
+	return mysqli_query($connect, "select * from ".$table);
 }
 
-function selectInfoData ($carNumber, $password) {
+function selectInfoData ($connect, $carNumber, $password) {
 	//print "select * from clientInfo WHERE CarNumber = '". $carNumber. "' AND password = '". $password."'";
-	return mysql_query("select * from clientInfo WHERE CarNumber = '". $carNumber. "' AND password = '". $password."';");
+	//return mysql_query("select * from clientInfo WHERE CarNumber = '". $carNumber. "' AND password = '". $password."';");
+	return mysqli_query($connect, "select * from clientInfo WHERE CarNumber = '". $carNumber. "';");
 }
 
 

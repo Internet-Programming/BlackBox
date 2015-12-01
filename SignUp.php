@@ -7,26 +7,24 @@ $rtn['data'] =json_decode(file_get_contents('php://input'),true);
 $carNumber = $rtn['data']['Num'];
 $password = $rtn['data']['PW'];
 
-print_r($carNumber);
-print_r($password);
 
 //print_r($password."  23455");
 
 $DBconn = connectDB();
 
-$result = selectInfoData ($carNumber, $password);
+$result = selectInfoData ($DBconn, $carNumber, $password);
 
 
 
 $i = 0;
-while($data = mysql_fetch_array($result)) {
+while($data = mysqli_fetch_array($result)) {
 	$i++;
 }
 
 if ($i > 0) {
 	$rtn['result'] = false;
 } else {
-	insertInfoData ($carNumber, $password);
+	insertInfoData ($DBconn, $carNumber, $password);
 
 	$rtn['result'] = true;
 }
@@ -35,7 +33,7 @@ if ($i > 0) {
 closeDB($DBconn);
 
 
-echo json_encode($rtn);
+echo json_encode($rtn,JSON_UNESCAPED_UNICODE);
 
 exit;
 ?>

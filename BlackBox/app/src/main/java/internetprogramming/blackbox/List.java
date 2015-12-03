@@ -223,108 +223,93 @@ public class List extends AppCompatActivity {
     /*Subclass (ASYNCTASK) */
     public class DownLoadFileTask extends AsyncTask<JSONObject,JSONObject,Boolean> {
 
-        ProgressDialog dialog = new ProgressDialog(List.this) ;
+         ProgressDialog dialog = new ProgressDialog(List.this) ;
+
+             @Override
+             protected void onPreExecute() {
+
+                 this.dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                 this.dialog.setTitle("");
+                 this.dialog.setMessage("다운로드 중입니다.");
+                 this.dialog.setCancelable(false);
+
+                 this.dialog.show();
+                 super.onPreExecute();
+            }
 
 
-        @Override
-        protected void onPreExecute() {
+              @Override
+              protected Boolean doInBackground(JSONObject[] job) {
 
-            this.dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            this.dialog.setTitle("");
-            this.dialog.setMessage("로그인 중입니다.");
-            this.dialog.setCancelable(false);
+             try {
+                   URL url = new URL("http://min.esy.es/DownLoadVideo.php");                //url 지정
+                   String response = null;
+                   //커넥션 오픈
+                   HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+                   huc.setReadTimeout(10000 /*ms*/);
+                   huc.setConnectTimeout(15000 /*ms*/);
+                   huc.setRequestProperty("Content-Type", "application/json");
+                   huc.setRequestProperty("Accept", "application/json");
+                   huc.setRequestProperty("Cache-Control", "no-cache");
+                   huc.setRequestMethod("POST");//POST
 
-            this.dialog.show();
-            super.onPreExecute();
+                   huc.setDoOutput(true);
+                   huc.setDoInput(true);
+                   /*서버로 값 전송 - Output Stream Writer*/
 
-        }
+                   OutputStreamWriter osw = new OutputStreamWriter(huc.getOutputStream());
+                   StringBuffer sbW = new StringBuffer(job[0].toString());
 
-        @Override
-        protected Boolean doInBackground(JSONObject[] job) {
+                   huc.connect();
+                   osw.write(job[0].toString());
+                   osw.flush();
+                   System.out.println(huc.getResponseCode());
 
-            try {
-                URL url = new URL("http://min.esy.es/DownLoadVideo.php");                //url 지정
-                String response = null;
-                //커넥션 오픈
-                HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-                huc.setReadTimeout(10000 /*ms*/);
-                huc.setConnectTimeout(15000 /*ms*/);
-                huc.setRequestProperty("Content-Type", "application/json");
-                huc.setRequestProperty("Accept", "application/json");
-                huc.setRequestProperty("Cache-Control", "no-cache");
-                huc.setRequestMethod("POST");//POST
 
-                huc.setDoOutput(true);
-                huc.setDoInput(true);
-            /*서버로 값 전송 - Output Stream Writer*/
+                   /*서버로부터 받기 - Input Stream Read=er*/
+                   int HttpResult = huc.getResponseCode();
+                   if (HttpResult == HttpURLConnection.HTTP_OK) {
 
-                OutputStreamWriter osw = new OutputStreamWriter(huc.getOutputStream());
-                StringBuffer sbW = new StringBuffer(job[0].toString());
-                System.out.println("서버 연결");
-                huc.connect();
-                System.out.println("서버에 데이터 전송");
-                osw.write(job[0].toString());
-                osw.flush();
-                System.out.println(huc.getResponseCode());
+                   int read;
+                   int len = huc.getContentLength();
+                   byte[] tempByte = new byte[len];
+                   InputStream is = huc.getInputStream();
 
-            /*서버로부터 받기 - Input Stream Read=er*/
-                int HttpResult = huc.getResponseCode();
-                if (HttpResult == HttpURLConnection.HTTP_OK) {
-                    InputStreamReader isr = new InputStreamReader(huc.getInputStream());
-                    StringBuffer sbR = new StringBuffer();
-                    BufferedReader br = new BufferedReader(isr);
-                    String line = null;
-                    while ((line = br.readLine()) != null) {
-                        sbR.append(line + "\n");
-                    }
-                    br.close();
 
-                    String jsonStr = sbR.toString();
-                    System.out.println(jsonStr);
+                   ////min.mp4 대신 시간을 가져와 이름을 생성 2015_12_04_05:30:24.mp4 요렇게
+                   File file = new File(Environment.getExternalStorageDirectory()+"/BlackBox/min.mp4");
+                   FileOutputStream fos = new FileOutputStream(file);
 
-                    int read;
-                    int len = huc.getContentLength();
-                    byte[] tempByte = new byte[len];
-                    InputStream is = huc.getInputStream();
-                    System.out.println("파일 만들기");
-
-                    File file = new File(Environment.getExternalStorageDirectory()+"/BlackBox/min.mp4");
-                    FileOutputStream fos = new FileOutputStream(file);
-                    System.out.println("파일 다운로드 시작");
-                    while (!((read = is.read(tempByte)) <= 0) ) {
-                        fos.write(tempByte, 0, read);
-                    }
-                    System.out.println("이제 파일에 쓴당");
+                   while (!((read = is.read(tempByte)) <= 0) ) {
+                          fos.write(tempByte, 0, read);
+                   }
 
                     fos.close();
                     is.close();
+                   }
+                   else {
+                       System.out.println(huc.getResponseMessage());
+                   }
+          /*통신 여부 확인 보내기 등등*/
+                 huc.disconnect();
+                 return true;
+             } catch (IOException e) {
+                 e.printStackTrace();
+             }
+              return null;
+         }
 
-                }
-                else {
-                    System.out.println(huc.getResponseMessage());
-                }
+         protected void onProgressUpdate(JSONObject[] values) {
+               super.onProgressUpdate(values);
+         }
 
-     /*통신 여부 확인 보내기 등등*/
-                huc.disconnect();
+         protected void onPostExecute(Boolean result) {
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        protected void onProgressUpdate(JSONObject[] values) {
-            super.onProgressUpdate(values);
-        }
-
-
-        protected void onPostExecute(Boolean result) {
             if(this.dialog != null && this.dialog.isShowing() ){
-                this.dialog.dismiss();
-            }
-            super.onPostExecute(result);
+                 this.dialog.dismiss();
+             }
+               super.onPostExecute(result);
 
-        }
-    }
+         }
+     }
 }

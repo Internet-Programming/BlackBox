@@ -1,6 +1,8 @@
 package internetprogramming.blackbox;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -10,6 +12,16 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 
 /*
@@ -36,6 +48,105 @@ public class List extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        /*Subclass (ASYNCTASK) */
+        class ListTask extends AsyncTask<JSONObject,JSONObject,Boolean> {
+
+            ProgressDialog dialog = new ProgressDialog(List.this) ;
+
+            @Override
+            protected void onPreExecute() {
+
+                this.dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                this.dialog.setTitle("");
+                this.dialog.setMessage("동영상 목록을 불러오는 중입니다.");
+                this.dialog.setCancelable(false);
+
+                this.dialog.show();
+                super.onPreExecute();
+
+            }
+
+            @Override
+            protected Boolean doInBackground(JSONObject[] job) {
+
+                try {
+                    URL url = new URL("http://min.esy.es/VideoList.php");                //url 지정
+                    String response = null;
+                    //커넥션 오픈
+                    HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+                    huc.setReadTimeout(10000 /*ms*/);
+                    huc.setConnectTimeout(15000 /*ms*/);
+                    huc.setRequestProperty("Content-Type", "application/json");
+                    huc.setRequestProperty("Accept", "application/json");
+                    huc.setRequestProperty("Cache-Control", "no-cache");
+                    huc.setRequestMethod("POST");//POST
+
+                    //huc.setDoOutput(true);
+                    huc.setDoInput(true);
+            /*서버로 값 전송 - Output Stream Writer*/
+            /*
+                    OutputStreamWriter osw = new OutputStreamWriter(huc.getOutputStream());
+                    StringBuffer sbW = new StringBuffer(job[0].toString());
+                    OutputStream os = huc.getOutputStream();
+
+                    huc.connect();
+                    osw.write(job[0].toString());
+                    osw.flush();
+            */
+
+            /*서버로부터 받기 - Input Stream Read=er*/
+                    int HttpResult = huc.getResponseCode();
+                    if (HttpResult == HttpURLConnection.HTTP_OK) {
+                        InputStreamReader isr = new InputStreamReader(huc.getInputStream());
+                        StringBuffer sbR = new StringBuffer();
+                        BufferedReader br = new BufferedReader(isr);
+                        String line = null;
+                        while ((line = br.readLine()) != null) {
+                            sbR.append(line + "\n");
+                        }
+                        br.close();
+
+                        String jsonStr = sbR.toString();
+                        System.out.println(jsonStr);
+                        JSONObject jsonObj = new JSONObject(jsonStr);
+
+
+                        if ((jsonObj.getJSONObject("data")).getBoolean("success") == false) {
+
+                            return false;
+                        } else {
+                            return true;
+                        }
+                    }
+                    else {
+                        System.out.println(huc.getResponseMessage());
+                    }
+
+     /*통신 여부 확인 보내기 등등*/
+                    huc.disconnect();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                return null;
+            }
+
+            protected void onProgressUpdate(JSONObject[] values) {
+                super.onProgressUpdate(values);
+            }
+
+
+            protected void onPostExecute(Boolean result) {
+                if(this.dialog != null && this.dialog.isShowing() ){
+                    this.dialog.dismiss();
+                }
+                super.onPostExecute(result);
+
+            }
+        }
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
@@ -57,14 +168,15 @@ public class List extends AppCompatActivity {
             }
         });
 
-        adapter.add("잘 될까?");
-        adapter.add("안 될까?");
-        adapter.add("잘 될까?");
-        adapter.add("안 될까?");
-        adapter.add("잘 될까?");
-        adapter.add("안 될까?");
-        adapter.add("잘 될까?");
-        adapter.add("안 될까?");
+        adapter.add("1");
+        adapter.add(" 2");
+        adapter.add("  3");
+        adapter.add("   4");
+        adapter.add("    5");
+        adapter.add("   6");
+        adapter.add("  7");
+        adapter.add(" 8");
+        adapter.add("9");
     }
 
 }

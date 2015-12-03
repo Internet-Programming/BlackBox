@@ -80,7 +80,7 @@ public class List extends AppCompatActivity {
                 JSONObject downloadInfo = new JSONObject();
                 try {
                     downloadInfo.put("Num", Main.CARNUMBER);
-                    downloadInfo.put("URI", "Videos/test.mp4");
+                    downloadInfo.put("URI", "videos/test.mp4"); //요기에 사용자가 클릭한 리스트의 URI 넣어주시면 됩니다.
                     DownLoadFileTask  downloadTask = new DownLoadFileTask();
                     boolean isSucess = downloadTask.execute(downloadInfo).get();
                     System.out.println(isSucess);
@@ -263,9 +263,7 @@ public class List extends AppCompatActivity {
 
                 OutputStreamWriter osw = new OutputStreamWriter(huc.getOutputStream());
                 StringBuffer sbW = new StringBuffer(job[0].toString());
-                System.out.println("서버 연결");
                 huc.connect();
-                System.out.println("서버에 데이터 전송");
                 osw.write(job[0].toString());
                 osw.flush();
                 System.out.println(huc.getResponseCode());
@@ -273,31 +271,19 @@ public class List extends AppCompatActivity {
             /*서버로부터 받기 - Input Stream Read=er*/
                 int HttpResult = huc.getResponseCode();
                 if (HttpResult == HttpURLConnection.HTTP_OK) {
-                    InputStreamReader isr = new InputStreamReader(huc.getInputStream());
-                    StringBuffer sbR = new StringBuffer();
-                    BufferedReader br = new BufferedReader(isr);
-                    String line = null;
-                    while ((line = br.readLine()) != null) {
-                        sbR.append(line + "\n");
-                    }
-                    br.close();
 
-                    String jsonStr = sbR.toString();
-                    System.out.println(jsonStr);
 
                     int read;
                     int len = huc.getContentLength();
                     byte[] tempByte = new byte[len];
                     InputStream is = huc.getInputStream();
-                    System.out.println("파일 만들기");
 
+                    ////min.mp4 대신 시간을 가져와 이름을 생성 2015_12_04_05:30:24.mp4 요렇게
                     File file = new File(Environment.getExternalStorageDirectory()+"/BlackBox/min.mp4");
                     FileOutputStream fos = new FileOutputStream(file);
-                    System.out.println("파일 다운로드 시작");
                     while (!((read = is.read(tempByte)) <= 0) ) {
                         fos.write(tempByte, 0, read);
                     }
-                    System.out.println("이제 파일에 쓴당");
 
                     fos.close();
                     is.close();
@@ -309,6 +295,7 @@ public class List extends AppCompatActivity {
 
      /*통신 여부 확인 보내기 등등*/
                 huc.disconnect();
+                return true;
 
             } catch (IOException e) {
                 e.printStackTrace();

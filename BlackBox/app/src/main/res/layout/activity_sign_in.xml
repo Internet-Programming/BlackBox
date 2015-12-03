@@ -17,14 +17,25 @@
         android:id="@+id/imageButton"
         android:layout_gravity="center_vertical"
         android:contentDescription="@string/capture"
-        android:src = "@drawable/ibt1"/>
+        android:src="@drawable/ibt1"
+        android:layout_alignBottom="@+id/imageButton3" />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/imageButton2"
         android:contentDescription="@string/list"
-        android:src = "@drawable/ibt2"
-        android:layout_alignParentTop="true"
+        android:src="@drawable/ibt2"
+        android:layout_alignBottom="@+id/imageButton"
         android:layout_alignParentEnd="true" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageButton3"
+        android:contentDescription="@string/fileTest"
+        android:src="@drawable/ibt3"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
 </RelativeLayout>

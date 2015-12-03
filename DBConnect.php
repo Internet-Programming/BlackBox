@@ -53,6 +53,9 @@ function insertVideoUri ($connect, $carNumber, $uri) {
 	mysqli_query($connect, "INSERT INTO VideoList (CarNumber, URI) VALUES('".$carNumber."','".$uri."')");
 }
 
+function selectVideoByCarName ($connect, $carNumber) {
+	return mysqli_query($connect, "select URI from VideoList WHERE CarNumber = '". $carNumber."';");
+}
 /*
 connectDB();
 

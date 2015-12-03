@@ -5,6 +5,7 @@
 
 	$rtn['result'] = true;
 	$carNumber = $rtn['data']['Num'];
+	//$URI = "videos/test.mp4";
 	$URI = $rtn['data']['URI'];
 	/*
 	$fileSize = filesize($URI);
@@ -15,17 +16,17 @@
 
 	
 	$filePath = $URI;
-	$file = "/".$URI;
+	$file = $_SERVER['DOCUMENT_ROOT']."/".$URI;
 	$file_size = filesize($file);
 	$filename = urlencode($filePath);
 	
-
+	/*
 	print_r($filePath ."<br>");
-	print_r($_SERVER['DOCUMENT_ROOT'] ."<br>");
+	print_r($file ."<br>");
 	print_r($file_size ."<br>");
 	
 	echo  json_encode($rtn,JSON_UNESCAPED_UNICODE);
-	/*
+	*/
 	if (is_file($file)) // 파일이 존재하면
 	{
 		// 파일 전송용 HTTP 헤더를 설정합니다.
@@ -50,8 +51,11 @@
 		}
 		//파일을 열어서, 전송합니다.
 		$fp = fopen($file, "rb");
-		if (!fpassthru($fp))
+		//if (!fpassthru($fp))
+
+		$content = fread($fp,filesize($file));
+		echo $content;
 		fclose($fp);
 	}
-	*/
+	
 ?>

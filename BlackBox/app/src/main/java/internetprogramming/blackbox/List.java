@@ -261,7 +261,7 @@ public class List extends AppCompatActivity {
                    StringBuffer sbW = new StringBuffer(job[0].toString());
 
                    huc.connect();
-                   osw.write(job[0].toString());
+                   osw.write(sbW.toString());
                    osw.flush();
                    System.out.println(huc.getResponseCode());
 

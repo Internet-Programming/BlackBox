@@ -7,4 +7,6 @@
     <string name="textVehiclePassword">비밀 번호</string>
     <string name="capture">capture</string>
     <string name="list">list</string>
+    <string name="fileTest">fileTest</string>
+    <string name="textOtherNumber">맞은편 차량 번호</string>
 </resources>

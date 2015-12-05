@@ -9,10 +9,9 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,6 +23,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
@@ -67,6 +67,32 @@ public class List extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),android.R.layout.simple_list_item_1);
 
         listView.setAdapter(adapter);
+        /*여기서 부터 리스트를 불러옵니다*/
+
+        JSONObject userInfo = new JSONObject();
+
+        try {
+            userInfo.put("Num", Main.CARNUMBER);
+
+            ListTask lt = new ListTask();
+            JSONArray items =  lt.execute(userInfo).get(); //서버와 통신한 후 리스트를 불러온다.
+
+            /*리스트 항목을 리스트뷰에 add*/
+            for(int i = 0;i < items.length(); i++){
+                adapter.add(items.getJSONObject(i).getString("filename"));
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            e.printStackTrace();
+        }
+
+
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             //첫번째 파라미터 : 클릭된 아이템을 보여주고 있는 AdapterView 객체(여기서는 ListView객체)
@@ -77,10 +103,12 @@ public class List extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 System.out.println(position);
+
+             /*
                 JSONObject downloadInfo = new JSONObject();
                 try {
                     downloadInfo.put("Num", Main.CARNUMBER);
-                    downloadInfo.put("URI", "videos/test.mp4"); //요기에 사용자가 클릭한 리스트의 URI 넣어주시면 됩니다.
+                    downloadInfo.put("URI", "Videos/test.mp4");
                     DownLoadFileTask  downloadTask = new DownLoadFileTask();
                     boolean isSucess = downloadTask.execute(downloadInfo).get();
                     System.out.println(isSucess);
@@ -90,40 +118,14 @@ public class List extends AppCompatActivity {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
                     e.printStackTrace();
-                }
-
-
+                }*/
             }
         });
 
-        JSONObject userInfo = new JSONObject();
-
-        try {
-            userInfo.put("Num", Main.CARNUMBER);
-
-            SignTask st = new SignTask();
-            boolean isSuccess = st.execute(userInfo).get();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        }
-
-
-        adapter.add("잘 될까?");
-        adapter.add("안 될까?");
-        adapter.add("잘 될까?");
-        adapter.add("안 될까?");
-        adapter.add("잘 될까?");
-        adapter.add("안 될까?");
-        adapter.add("잘 될까?");
-        adapter.add("안 될까?");
     }
-
+///////////////////////////////////////////////////////////////////////////////////////////////
     /*Subclass (ASYNCTASK) */
-    public class SignTask extends AsyncTask<JSONObject,JSONObject,Boolean> {
+    public class ListTask extends AsyncTask<JSONObject,JSONObject,JSONArray> {
 
         ProgressDialog dialog = new ProgressDialog(List.this) ;
 
@@ -133,7 +135,7 @@ public class List extends AppCompatActivity {
 
             this.dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             this.dialog.setTitle("");
-            this.dialog.setMessage("로그인 중입니다.");
+            this.dialog.setMessage("목록을 불러오는 중입니다.");
             this.dialog.setCancelable(false);
 
             this.dialog.show();
@@ -142,7 +144,7 @@ public class List extends AppCompatActivity {
         }
 
         @Override
-        protected Boolean doInBackground(JSONObject[] job) {
+        protected JSONArray doInBackground(JSONObject[] job) {
 
             try {
                 URL url = new URL("http://min.esy.es/VideoList.php");                //url 지정
@@ -158,18 +160,17 @@ public class List extends AppCompatActivity {
 
                 huc.setDoOutput(true);
                 huc.setDoInput(true);
-            /*서버로 값 전송 - Output Stream Writer*/
+            /*서버로 값 전송 - Output Stream Writer*/ //CAR NUMBER 전송
 
                 OutputStreamWriter osw = new OutputStreamWriter(huc.getOutputStream());
                 StringBuffer sbW = new StringBuffer(job[0].toString());
-                OutputStream os = huc.getOutputStream();
 
-                huc.connect();
-                osw.write(job[0].toString());
+                huc.connect(); // 주의!
+                osw.write(sbW.toString());
                 osw.flush();
 
+            /*서버로부터 받기 - Input Stream Reader*/ //LIST 가져오기
 
-            /*서버로부터 받기 - Input Stream Read=er*/
                 int HttpResult = huc.getResponseCode();
                 if (HttpResult == HttpURLConnection.HTTP_OK) {
                     InputStreamReader isr = new InputStreamReader(huc.getInputStream());
@@ -182,16 +183,13 @@ public class List extends AppCompatActivity {
                     br.close();
 
                     String jsonStr = sbR.toString();
-                    System.out.println(jsonStr);
                     JSONObject jsonObj = new JSONObject(jsonStr);
+                    JSONArray jsonArr = ( jsonObj.getJSONObject("data") ).getJSONArray("filelist") ;
 
+                    System.out.println(jsonObj);
+                    System.out.println(jsonArr);
 
-                    if ((jsonObj.getJSONObject("data")).getBoolean("success") == false) {
-
-                        return false;
-                    } else {
-                        return true;
-                    }
+                    return jsonArr;
                 }
                 else {
                     System.out.println(huc.getResponseMessage());
@@ -205,7 +203,6 @@ public class List extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-
             return null;
         }
 
@@ -214,7 +211,7 @@ public class List extends AppCompatActivity {
         }
 
 
-        protected void onPostExecute(Boolean result) {
+        protected void onPostExecute(JSONArray result) {
             if(this.dialog != null && this.dialog.isShowing() ){
                 this.dialog.dismiss();
             }
@@ -226,95 +223,93 @@ public class List extends AppCompatActivity {
     /*Subclass (ASYNCTASK) */
     public class DownLoadFileTask extends AsyncTask<JSONObject,JSONObject,Boolean> {
 
-        ProgressDialog dialog = new ProgressDialog(List.this) ;
+         ProgressDialog dialog = new ProgressDialog(List.this) ;
+
+             @Override
+             protected void onPreExecute() {
+
+                 this.dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+                 this.dialog.setTitle("");
+                 this.dialog.setMessage("다운로드 중입니다.");
+                 this.dialog.setCancelable(false);
+
+                 this.dialog.show();
+                 super.onPreExecute();
+            }
 
 
-        @Override
-        protected void onPreExecute() {
+              @Override
+              protected Boolean doInBackground(JSONObject[] job) {
 
-            this.dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            this.dialog.setTitle("");
-            this.dialog.setMessage("로그인 중입니다.");
-            this.dialog.setCancelable(false);
+             try {
+                   URL url = new URL("http://min.esy.es/DownLoadVideo.php");                //url 지정
+                   String response = null;
+                   //커넥션 오픈
+                   HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+                   huc.setReadTimeout(10000 /*ms*/);
+                   huc.setConnectTimeout(15000 /*ms*/);
+                   huc.setRequestProperty("Content-Type", "application/json");
+                   huc.setRequestProperty("Accept", "application/json");
+                   huc.setRequestProperty("Cache-Control", "no-cache");
+                   huc.setRequestMethod("POST");//POST
 
-            this.dialog.show();
-            super.onPreExecute();
+                   huc.setDoOutput(true);
+                   huc.setDoInput(true);
+                   /*서버로 값 전송 - Output Stream Writer*/
 
-        }
+                   OutputStreamWriter osw = new OutputStreamWriter(huc.getOutputStream());
+                   StringBuffer sbW = new StringBuffer(job[0].toString());
 
-        @Override
-        protected Boolean doInBackground(JSONObject[] job) {
-
-            try {
-                URL url = new URL("http://min.esy.es/DownLoadVideo.php");                //url 지정
-                String response = null;
-                //커넥션 오픈
-                HttpURLConnection huc = (HttpURLConnection) url.openConnection();
-                huc.setReadTimeout(10000 /*ms*/);
-                huc.setConnectTimeout(15000 /*ms*/);
-                huc.setRequestProperty("Content-Type", "application/json");
-                huc.setRequestProperty("Accept", "application/json");
-                huc.setRequestProperty("Cache-Control", "no-cache");
-                huc.setRequestMethod("POST");//POST
-
-                huc.setDoOutput(true);
-                huc.setDoInput(true);
-            /*서버로 값 전송 - Output Stream Writer*/
-
-                OutputStreamWriter osw = new OutputStreamWriter(huc.getOutputStream());
-                StringBuffer sbW = new StringBuffer(job[0].toString());
-                huc.connect();
-                osw.write(job[0].toString());
-                osw.flush();
-                System.out.println(huc.getResponseCode());
-
-            /*서버로부터 받기 - Input Stream Read=er*/
-                int HttpResult = huc.getResponseCode();
-                if (HttpResult == HttpURLConnection.HTTP_OK) {
+                   huc.connect();
+                   osw.write(sbW.toString());
+                   osw.flush();
+                   System.out.println(huc.getResponseCode());
 
 
-                    int read;
-                    int len = huc.getContentLength();
-                    byte[] tempByte = new byte[len];
-                    InputStream is = huc.getInputStream();
+                   /*서버로부터 받기 - Input Stream Read=er*/
+                   int HttpResult = huc.getResponseCode();
+                   if (HttpResult == HttpURLConnection.HTTP_OK) {
 
-                    ////min.mp4 대신 시간을 가져와 이름을 생성 2015_12_04_05:30:24.mp4 요렇게
-                    File file = new File(Environment.getExternalStorageDirectory()+"/BlackBox/min.mp4");
-                    FileOutputStream fos = new FileOutputStream(file);
-                    while (!((read = is.read(tempByte)) <= 0) ) {
-                        fos.write(tempByte, 0, read);
-                    }
+                   int read;
+                   int len = huc.getContentLength();
+                   byte[] tempByte = new byte[len];
+                   InputStream is = huc.getInputStream();
+
+
+                   ////min.mp4 대신 시간을 가져와 이름을 생성 2015_12_04_05:30:24.mp4 요렇게
+                   File file = new File(Environment.getExternalStorageDirectory()+"/BlackBox/min.mp4");
+                   FileOutputStream fos = new FileOutputStream(file);
+
+                   while (!((read = is.read(tempByte)) <= 0) ) {
+                          fos.write(tempByte, 0, read);
+                   }
 
                     fos.close();
                     is.close();
+                   }
+                   else {
+                       System.out.println(huc.getResponseMessage());
+                   }
+          /*통신 여부 확인 보내기 등등*/
+                 huc.disconnect();
+                 return true;
+             } catch (IOException e) {
+                 e.printStackTrace();
+             }
+              return null;
+         }
 
-                }
-                else {
-                    System.out.println(huc.getResponseMessage());
-                }
+         protected void onProgressUpdate(JSONObject[] values) {
+               super.onProgressUpdate(values);
+         }
 
-     /*통신 여부 확인 보내기 등등*/
-                huc.disconnect();
-                return true;
+         protected void onPostExecute(Boolean result) {
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
-        }
-
-        protected void onProgressUpdate(JSONObject[] values) {
-            super.onProgressUpdate(values);
-        }
-
-
-        protected void onPostExecute(Boolean result) {
             if(this.dialog != null && this.dialog.isShowing() ){
-                this.dialog.dismiss();
-            }
-            super.onPostExecute(result);
+                 this.dialog.dismiss();
+             }
+               super.onPostExecute(result);
 
-        }
-    }
+         }
+     }
 }

@@ -29,6 +29,7 @@ public class SignIn extends AppCompatActivity {
 
         ImageButton btnCapture = (ImageButton) findViewById(R.id.imageButton); //캡쳐  버튼
         ImageButton btnList = (ImageButton) findViewById(R.id.imageButton2); //리스트 버튼
+        ImageButton btnTest = (ImageButton) findViewById(R.id.imageButton3 ); //테스트 버튼
 
         btnCapture.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -44,6 +45,15 @@ public class SignIn extends AppCompatActivity {
             public void onClick(View v) {
                 Intent itL = new Intent(getApplicationContext(), List.class);
                 startActivity(itL);
+                finish();
+            }
+        });
+
+        btnTest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent itT = new Intent(getApplicationContext(), Test.class);
+                startActivity(itT);
                 finish();
             }
         });

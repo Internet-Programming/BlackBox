@@ -138,10 +138,10 @@ public class Main extends AppCompatActivity {
 
                 OutputStreamWriter osw = new OutputStreamWriter(huc.getOutputStream());
                 StringBuffer sbW = new StringBuffer(job[0].toString());
-                OutputStream os = huc.getOutputStream();
 
                 huc.connect();
-                osw.write(job[0].toString());
+                osw.write(sbW.toString());
+
                 osw.flush();
 
 

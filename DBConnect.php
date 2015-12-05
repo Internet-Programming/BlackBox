@@ -49,6 +49,10 @@ function selectInfoDataSignIn ($connect, $carNumber, $password) {
 	return mysqli_query($connect, "select * from clientInfo WHERE CarNumber = '". $carNumber. "' AND password = '". $password."';");
 }
 
+function selectInfoDataFront ($connect, $carNumber) {
+	return mysqli_query($connect, "select * from clientInfo WHERE CarNumber = '". $carNumber. "';");
+}
+
 function insertVideoUri ($connect, $carNumber, $uri) {
 	mysqli_query($connect, "INSERT INTO VideoList (CarNumber, URI) VALUES('".$carNumber."','".$uri."')");
 }

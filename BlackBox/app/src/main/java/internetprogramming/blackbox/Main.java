@@ -45,7 +45,6 @@ public class Main extends AppCompatActivity  implements ProgressGenerator.OnComp
     @Override
     public void onDestroy() {
         super.onDestroy();
-        stopService(new Intent("SensorService"));
     }
 
     @Override
@@ -72,8 +71,7 @@ public class Main extends AppCompatActivity  implements ProgressGenerator.OnComp
             }
         });
 
-        //삭제 꼭 필요....
-        startService(new Intent("SensorService"));
+
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override

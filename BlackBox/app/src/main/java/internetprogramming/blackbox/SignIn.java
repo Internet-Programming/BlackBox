@@ -32,31 +32,31 @@ public class SignIn extends AppCompatActivity {
         ImageButton btnTest = (ImageButton) findViewById(R.id.imageButton3 ); //테스트 버튼
 
         btnCapture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent itC = new Intent(getApplicationContext(), Camera_EX.class);
-                startActivity(itC);
-                finish();
-            }
+@Override
+public void onClick(View v) {
+        Intent itC = new Intent(getApplicationContext(), Camera_EX.class);
+        startActivity(itC);
+        finish();
+        }
         });
 
         btnList.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent itL = new Intent(getApplicationContext(), List.class);
-                startActivity(itL);
-                finish();
-            }
+@Override
+public void onClick(View v) {
+        Intent itL = new Intent(getApplicationContext(), List.class);
+        startActivity(itL);
+        finish();
+        }
         });
 
         btnTest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent itT = new Intent(getApplicationContext(), Test.class);
-                startActivity(itT);
-                finish();
-            }
+@Override
+public void onClick(View v) {
+        Intent itT = new Intent(getApplicationContext(), Test.class);
+        startActivity(itT);
+        finish();
+        }
         });
 
-    }
-}
+        }
+        }

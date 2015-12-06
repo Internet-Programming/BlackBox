@@ -3,7 +3,7 @@
     package="internetprogramming.blackbox" >
 
     <uses-sdk
-        android:minSdkVersion="9"
+        android:minSdkVersion="7"
         android:targetSdkVersion="19" />
     //target SDK Version
     //Permission

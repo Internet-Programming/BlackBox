@@ -21,6 +21,7 @@ import android.media.MediaRecorder;
 
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.Environment;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -132,7 +133,7 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
     // 레코더 객체 생성
     private MediaRecorder recorder = null;
     // 아웃풋 파일 경로
-    private String OUTPUT_FILE = "/sdcard/camtest/";
+    private String OUTPUT_FILE = Environment.getExternalStorageDirectory().getAbsolutePath()+"/";
     // 녹화 시간 - 10초
     private static final int RECORDING_TIME = 9900;
 
@@ -159,6 +160,7 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
         try {
             // 카메라 객체를 만든다
             mCamera = Camera.open();
+            System.out.println("카메라 오픈"+ mCamera);
             // 카메라 객체의 파라메터를 얻고 로테이션을 90도 꺽는다,옵Q의 경우 90회전을 필요로 한다 ,옵Q는 지원 안하는듯....
             Camera.Parameters parameters = mCamera.getParameters();
             parameters.setRotation(90);
@@ -302,11 +304,13 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
         }
         // 파일 생성/초기화
         Log.e("CAM TEST", "#2 Create File");
+        /*
         File outFile = new File(FILE_PATH);
         if (outFile.exists())
         {
             outFile.delete();
         }
+        */
         Log.e("CAM TEST", "#3 Release Camera");
         if (mCamera != null){
             mCamera.stopPreview();
@@ -317,14 +321,13 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
         }
 
 
-
         try {
 
             recorder = new MediaRecorder();
-
-
+           // mCamera = new
+            //recorder.setCamera(mCamera);
             recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
-            recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            recorder.setAudioSource(MediaRecorder.AudioSource.DEFAULT);
             recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             recorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);

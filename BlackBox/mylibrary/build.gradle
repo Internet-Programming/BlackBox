@@ -1,10 +1,10 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "internetprogramming.blackbox"
         minSdkVersion 19
         targetSdkVersion 23
         versionCode 1
@@ -17,15 +17,9 @@ android {
         }
     }
 }
-dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
-    testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.1.0'
-    compile 'com.android.support:design:23.1.0'
-    compile project(':mylibrary')
-}
 
-repositories {
-    jcenter()
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.1.1'
 }

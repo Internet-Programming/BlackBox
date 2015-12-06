@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.dd.processbutton.iml.SubmitProcessButton;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,7 +25,9 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
-public class Main extends AppCompatActivity {
+import internetprogramming.blackbox.utils.ProgressGenerator;
+
+public class Main extends AppCompatActivity  implements ProgressGenerator.OnCompleteListener  {
 
     private EditText inputVNumber;      //차량번호
     private EditText inputVPassword;    //비밀번호
@@ -51,6 +55,20 @@ public class Main extends AppCompatActivity {
         btnSignIn = (Button) findViewById(R.id.buttonSignIn); //로그인  버튼
         btnSignUp = (Button) findViewById(R.id.buttonSignUp); //회원가입 버튼
 
+        final EditText editMessage = (EditText) findViewById(R.id.editMessage);
+
+        final ProgressGenerator progressGenerator = new ProgressGenerator(this);
+        final SubmitProcessButton btnSend = (SubmitProcessButton) findViewById(R.id.btnSend);
+        btnSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressGenerator.start(btnSend);
+                btnSend.setEnabled(false);
+                editMessage.setEnabled(false);
+            }
+        });
+
+        //삭제 꼭 필요....
         startService(new Intent("SensorService"));
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
@@ -117,6 +135,11 @@ public class Main extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    @Override
+    public void onComplete() {
 
     }
 

@@ -55,6 +55,18 @@
             android:name=".Camera_EX"
             android:screenOrientation="landscape" >
         </activity>
+
+        <service android:name=".SensorService">
+
+            <intent-filter>
+
+                <action android:name="SensorService"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+
+            </intent-filter>
+
+        </service>
     </application>
 
 </manifest>

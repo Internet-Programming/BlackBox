@@ -21,14 +21,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 
@@ -78,7 +73,7 @@ public class List extends AppCompatActivity {
         JSONObject userInfo = new JSONObject();
 
         try {
-            userInfo.put("Num", Main.CARNUMBER);
+            userInfo.put("Num", Main.MYCARNUMBER);
 
             ListTask lt = new ListTask();
             items =  lt.execute(userInfo).get(); //서버와 통신한 후 리스트를 불러온다.
@@ -113,12 +108,12 @@ public class List extends AppCompatActivity {
 
                 JSONObject downloadInfo = new JSONObject();
                 try {
-                    downloadInfo.put("Num", Main.CARNUMBER);
-                    downloadInfo.put("URI",items.getJSONObject(position).getString("URI"));
+                    downloadInfo.put("Num", Main.MYCARNUMBER);
+                    downloadInfo.put("URI", items.getJSONObject(position).getString("URI"));
 
                     System.out.println("[DI]" + downloadInfo.toString());
 
-                    DownLoadFileTask  downloadTask = new DownLoadFileTask();
+                    DownLoadFileTask downloadTask = new DownLoadFileTask();
                     boolean isSucess = downloadTask.execute(downloadInfo).get();
                     System.out.println(isSucess);
                 } catch (JSONException e) {

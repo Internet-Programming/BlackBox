@@ -21,12 +21,12 @@
 	}
 
 	$data = implode('\n', array_values($lines));
-	$file = fopen($path);
+	$file = fopen($connectFilePath,"w");
 	fwrite($file, $data);
 	fclose($file);
 		/*
 	while (($tempString = fgets($connectFile))>0) {
-		$arrString = split(" ", $tempString);
+		$arrString = explode(" ", $tempString);
 		if (!strcmp($arrString[0],$myCarNumber) && !strcmp($arrString[1], $yourCarNumber)) {
 			//mb_strlen($tempString, "EUC_KR");
 			//mb_strlen($tempString, "UTF-8");

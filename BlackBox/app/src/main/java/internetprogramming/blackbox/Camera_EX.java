@@ -359,34 +359,53 @@ public class Camera_EX extends Activity {
 
                 Main.lastFlag = false;
 
-                new Handler().postDelayed(new Runnable() {
+                //new Handler().postDelayed(new Runnable() {
+                TimerTask task = new TimerTask() {
+                    @Override
                     public void run() {
+                        if (Main.lastFlag == true) this.cancel();
+                        try {
+                            if (Main.YOURCARNUMBER == null) {
+                                Main.JSONDATA.put("Order","solo");
+                            } else {
+
+                                Main.JSONDATA.put("Order","checkShock");
+
+                                startService(new Intent("SensorService"));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
                         CheckEveryTask ot = new CheckEveryTask();
-                        System.out.println("CheckEveryTask를 합시다");
+                        System.out.println("CheckEveryTask를 합니다");
                         try {
                             Main.JSONDATA.put("MyNum", Main.MYCARNUMBER);
                             Main.JSONDATA.put("YourNum", Main.YOURCARNUMBER);
                             //while (Main.lastFlag == false) {
-                                //////여기작업
-                                JSONObject checkEveryTask = ot.execute(Main.JSONDATA).get();
-                                if(checkEveryTask.getBoolean("result")) {
-                                    if (checkEveryTask.getString("Order").equals( "solo")) {
-                                        Main.YOURCARNUMBER = Main.JSONDATA.getString("YourNum");
-                                    } else if (checkEveryTask.getString("Order").equals("checkShock")) {
-                                        if (checkEveryTask.getBoolean("shock")) {
-                                            Thread.sleep(2000);
-                                            UploadFile upload = new UploadFile();
-                                            upload.execute(Main.fileName1);
-                                            upload.execute(Main.fileName2);
-                                            upload.execute(Main.fileName3);
+                            //////여기작업
+                            JSONObject checkEveryTask = ot.execute(Main.JSONDATA).get();
+                            System.out.println(checkEveryTask);
+                            if (checkEveryTask.getBoolean("result")) {
+                                if (checkEveryTask.getString("Order").equals("solo")) {
+                                    System.out.println("이제 커플로 연결" + checkEveryTask);
+                                    Main.YOURCARNUMBER = checkEveryTask.getJSONObject("data").getString("YourNum");
+                                } else if (checkEveryTask.getString("Order").equals("checkShock")) {
+                                    if (checkEveryTask.getJSONObject("data").getBoolean("shock")) {
+                                        Thread.sleep(20000);
+                                        UploadFile upload1 = new UploadFile();
+                                        upload1.execute(Main.fileName1).get();
+                                        UploadFile upload2 = new UploadFile();
+                                        upload2.execute(Main.fileName2);
+                                        UploadFile upload3 = new UploadFile();
+                                        upload3.execute(Main.fileName3);
 
 
-                                        } else if (checkEveryTask.getBoolean("connect") == false) {
-                                            Main.YOURCARNUMBER = null;
-                                        }
+                                    } else if (checkEveryTask.getJSONObject("data").getBoolean("connect") == false) {
+                                        Main.YOURCARNUMBER = null;
                                     }
                                 }
+                            }
 
 
                             //}
@@ -398,21 +417,12 @@ public class Camera_EX extends Activity {
                             e.printStackTrace();
                         }
                     }
-                },5000);
+                    //},5000);
+                };
+                Timer timer =new Timer();
+                timer.schedule(task,3000,5000);
 
 
-                try {
-                    if (Main.YOURCARNUMBER == null) {
-                        Main.JSONDATA.put("Order","solo");
-                    } else {
-
-                        Main.JSONDATA.put("Order","checkShock");
-
-                        startService(new Intent("SensorService"));
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
 
                 mTask2 = new TimerTask() {

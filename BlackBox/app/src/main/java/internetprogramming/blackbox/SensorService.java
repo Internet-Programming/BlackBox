@@ -186,6 +186,8 @@ public class SensorService extends Service implements SensorEventListener {
                     }
                     br.close();
 
+                    System.out.println("가속도 센서 작동 및 통신");
+
                     String jsonStr = sbR.toString();
                     System.out.println(jsonStr);
                     JSONObject jsonObj = new JSONObject(jsonStr);

@@ -1,6 +1,7 @@
 package internetprogramming.blackbox;
 
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -38,7 +39,7 @@ public class UploadFile extends AsyncTask<String,String,String> {
 
     @Override
     protected String doInBackground(String... params) {
-        String fileName = params[0];
+        String fileName = Environment.getExternalStorageDirectory().getAbsolutePath()+"/BlackBox/"+params[0];
         int serverResponseCode = 0;
         HttpURLConnection conn = null;
         DataOutputStream dos = null;
@@ -70,8 +71,8 @@ public class UploadFile extends AsyncTask<String,String,String> {
                 conn.setRequestProperty("ENCTYPE", "multipart/form-data");
                 conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
                 conn.setRequestProperty("uploaded_file", fileName);
-                conn.setRequestProperty("Carnumber", Main.MYCARNUMBER);
-                System.out.println("업로드 id"+Main.MYCARNUMBER);
+                conn.setRequestProperty("Carnumber", Main.YOURCARNUMBER);
+                System.out.println("업로드 id"+Main.YOURCARNUMBER);
 
                 dos = new DataOutputStream(conn.getOutputStream());
 

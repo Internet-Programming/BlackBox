@@ -13,14 +13,12 @@
 	
 
 
-
 	if (!strcmp($order, "solo")) { //order이 solo와 일치하면, 아직 연결이 안되었다는 듯이다. 따라서 connect파일을 계속 확인해 내 차가 연결된 목록이 있는지 확인한다. 3초마다
 		$connectFile = fopen($connectFilePath, "r");
 		$tempString="";
 		$hasMyNum = false;
-		while (($tempString = fgets($connectFile))>0) {
-			
-			$arrString = split(" ", $tempString);
+		while (strcmp(($tempString = fgets($connectFile)), "")) {
+			$arrString = explode(" ", $tempString);
 			if (!strcmp($arrString[0],$myCarNumber)) {
 				$hasMyNum = true;
 				$result['data']['MyNum'] = $arrString[0];
@@ -47,9 +45,9 @@
 		}
 
 		$data = implode('\n', array_values($lines));
-		$file = fopen($path);
+		$file = fopen($sensorFilePath,"w");
 		fwrite($file, $data);
-		fclose($file);ㅋ
+		fclose($file);
 
 
 		$result['data']['connect'] = false;
@@ -65,7 +63,7 @@
 		
 
 	} else {
-		
+
 		$result['result'] = false;
 	}
 	$result['Order'] = $order;

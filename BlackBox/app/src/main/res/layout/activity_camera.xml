@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
@@ -36,4 +34,3 @@
     </LinearLayout>
 
 </LinearLayout>
->>>>>>> b303f32c6976d274d0120dabaa997b5ad70f35b1

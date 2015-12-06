@@ -38,6 +38,10 @@ public class Main extends AppCompatActivity  implements ProgressGenerator.OnComp
     static String MYCARNUMBER;
     static String YOURCARNUMBER;
 
+    static String fileName1;
+    static String fileName2;
+    static String fileName3;
+    static boolean lastFlag = false;
     @Override
     public void onDestroy() {
         super.onDestroy();

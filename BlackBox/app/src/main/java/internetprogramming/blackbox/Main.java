@@ -43,7 +43,6 @@ public class Main extends AppCompatActivity  implements ProgressGenerator.OnComp
     static String fileName4;
     static boolean lastFlag=false;
     static JSONObject JSONDATA = new JSONObject();
-
     @Override
     public void onDestroy() {
         super.onDestroy();

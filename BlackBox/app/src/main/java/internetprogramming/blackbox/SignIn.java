@@ -34,7 +34,7 @@ public class SignIn extends AppCompatActivity {
         btnCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent itC = new Intent(getApplicationContext(), Capture.class);
+                Intent itC = new Intent(getApplicationContext(), Camera_EX.class);
                 startActivity(itC);
                 finish();
             }

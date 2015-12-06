@@ -8,7 +8,7 @@
     var test = {"Num":$("#Num").val(), "PW":$("#PW").val()};  // json 객체 생성하기
 
         console.log(test);
-        console.log("\"Num\":\"테스트\",\"PW\":\"pass\"");
+        console.log("\"Num\":\"테스트\",\"PW\":\"pass\"".toString().getBy);
     function SignUp () {
 
 
@@ -17,7 +17,7 @@
         console.log(js.toString());
         var stringTest = "\"Num\":\"테스트\",\"PW\":\"pass\"";
         $.post(
-            "SignUp.php"
+            "CheckClient.php"
             ,stringTest
             ,function(data) {
                 console.log(data);

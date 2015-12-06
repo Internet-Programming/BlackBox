@@ -37,6 +37,12 @@ public class Main extends AppCompatActivity  implements ProgressGenerator.OnComp
 
     static String MYCARNUMBER;
     static String YOURCARNUMBER;
+    static String fileName1;
+    static String fileName2;
+    static String fileName3;
+    static String fileName4;
+    static boolean lastFlag=false;
+    static JSONObject JSONDATA = new JSONObject();
 
     @Override
     public void onDestroy() {

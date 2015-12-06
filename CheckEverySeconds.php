@@ -34,7 +34,7 @@
 		}
 		$result['result'] = $hasMyNum;
 		fclose($connectFile);
-	} else if (!strcmp($order, "checkShock")) { //3초마다 내 차가  충격을 받앗는지 체크 sensorFile에서 가져온다. 또한,3초마다 혹시 상대가 연결을 끊었는지 connect파일에서 확인한다.
+	} else if (!strcmp($order, "checkShock")) { //3초마다 상대편 차가  충격을 받앗는지 체크 sensorFile에서 가져온다. 또한,3초마다 혹시 상대가 연결을 끊었는지 connect파일에서 확인한다.
 		//3초마다
 		$lines = file($sensorFilePath, FILE_IGNORE_NEW_LINES);
 		$remove = $myCarNumber;
@@ -49,7 +49,7 @@
 		$data = implode('\n', array_values($lines));
 		$file = fopen($path);
 		fwrite($file, $data);
-		fclose($file);
+		fclose($file);ㅋ
 
 
 		$result['data']['connect'] = false;
@@ -57,7 +57,7 @@
 		$remove = $myCarNumber;
 		foreach($lines as $key => $line) {
 			if(stristr($line, $remove)) {
-		  		$result['data']['shock'] = true;
+		  		$result['data']['connect'] = true;
 			}
 		}		
 
@@ -65,9 +65,10 @@
 		
 
 	} else {
+		
 		$result['result'] = false;
 	}
-
+	$result['Order'] = $order;
 	echo json_encode($result,JSON_UNESCAPED_UNICODE);
 	exit;
 

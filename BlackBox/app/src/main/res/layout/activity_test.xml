@@ -10,12 +10,6 @@
 
     tools:context="internetprogramming.blackbox.Test"    >
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/textOtherNumber"
-        android:id="@+id/buttonOther"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+
 
 </RelativeLayout>

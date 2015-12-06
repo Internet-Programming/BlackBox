@@ -1,8 +1,6 @@
 package internetprogramming.blackbox;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -19,6 +17,17 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+
+
+/*현재 시간*//*
+long now = System.currentTimeMillis();    // 현재 시간을 msec으로 구한다.
+Date date = new Date(now);                // 현재 시간을 저장 한다.
+
+SimpleDateFormat sdfNow = new SimpleDateFormat("yyyy_MM_dd_HH:mm:ss");
+String strNow = sdfNow.format(date);
+
+ System.out.println(strNow);*/
+
 
 /**
  * Created by min on 2015-12-01.

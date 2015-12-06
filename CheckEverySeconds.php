@@ -14,11 +14,11 @@
 
 
 
-	if (!strcmp($order, "solo")) { //order이 solo와 일치하면, 아직 연결이 안되었다는 듯이다. 따라서 connect파일을 계속 확인해 내 차가 연결된 목록이 있는지 확인한다.
+	if (!strcmp($order, "solo")) { //order이 solo와 일치하면, 아직 연결이 안되었다는 듯이다. 따라서 connect파일을 계속 확인해 내 차가 연결된 목록이 있는지 확인한다. 3초마다
 		$connectFile = fopen($connectFilePath, "r");
 		$tempString="";
 		$hasMyNum = false;
-		while (($tempString = fgets($connectFile[, 999]))>0) {
+		while (($tempString = fgets($connectFile))>0) {
 			
 			$arrString = split(" ", $tempString);
 			if (!strcmp($arrString[0],$myCarNumber)) {
@@ -34,26 +34,34 @@
 		}
 		$result['result'] = $hasMyNum;
 		fclose($connectFile);
-	} else if (!strcmp($order, "connect")) { //order이 connect 이면, my와 your를 연결하는 파일에 써준다.
-		$connectFile = fopen($connectFilePath, "a");
-		$tempString = $myCarNumber." ".$yourCarNumber." \n";
-		fwrite($connectFile, $tempString[,999]);
-		fclose($connectFile);
-		$result['result'] = true;
 	} else if (!strcmp($order, "checkShock")) { //3초마다 내 차가  충격을 받앗는지 체크 sensorFile에서 가져온다. 또한,3초마다 혹시 상대가 연결을 끊었는지 connect파일에서 확인한다.
+		//3초마다
+		$lines = file($sensorFilePath, FILE_IGNORE_NEW_LINES);
+		$remove = $myCarNumber;
+		$result['data']['shock'] = false;
+		foreach($lines as $key => $line) {
+			if(stristr($line, $remove)) {
+		  		unset($lines[$key]); //$remove 가 들어있는 한줄 전체를 없앤다.
+		  		$result['data']['shock'] = true;
+			}
+		}
 
-	} else if (!strcmp($order, "shock")) { //차가 충격을 받았을경우 sensorFile에 상대편 차를 쓴다.
-		$sensorFile = fopen($sensorFilePath, "a");
-		$tempString = $yourCarNumber." \n";
-		fwrite($sensorFile, $tempString[,999]);
-		fclose($sensorFile);
+		$data = implode('\n', array_values($lines));
+		$file = fopen($path);
+		fwrite($file, $data);
+		fclose($file);
+
+
+		$result['data']['connect'] = false;
+		$lines = file($connectFilePath, FILE_IGNORE_NEW_LINES);
+		$remove = $myCarNumber;
+		foreach($lines as $key => $line) {
+			if(stristr($line, $remove)) {
+		  		$result['data']['shock'] = true;
+			}
+		}		
+
 		$result['result'] = true;
-	} else if (!strcmp($order, "disconnect")) { //한쪽에서 연결을 끊으려 할때 오는 정보 처리 connect파일에서 정보를 지운다.
-		$connectFile = fopen($connectFilePath, "r+");
-		$tempString="";
-
-
-		////여기해야댐
 		
 
 	} else {

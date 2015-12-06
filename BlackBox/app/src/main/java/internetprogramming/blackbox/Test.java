@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -63,20 +64,27 @@ public class Test extends AppCompatActivity {
                 alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
 
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        String value = input.getText().toString();
-                        value.toString();
-                        // Do something with value!
-                        OtherTask ot = new OtherTask();
 
-                        ot.execute(value);
+                        try {
+
+                            JSONObject value = new JSONObject();
+                            value.put("Num", input.getText().toString());
+                            // {"Num" : input.getText().toString() };
+                            // Do something with value!
+                            OtherTask ot = new OtherTask();
+
+                            ot.execute(value);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
 
                     }
                 });
-                alert.setNegativeButton("취소",  new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                // Canceled.
-                            }
-                        });
+                alert.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        // Canceled.
+                    }
+                });
                 alert.show();
             }
         });
@@ -85,7 +93,7 @@ public class Test extends AppCompatActivity {
 
 
     /*Subclass (ASYNCTASK) */
-    public class OtherTask extends AsyncTask<String,String,Boolean> {
+    public class OtherTask extends AsyncTask<JSONObject,JSONObject,Boolean> {
 
         ProgressDialog dialog = new ProgressDialog(Test.this) ;
 
@@ -104,10 +112,10 @@ public class Test extends AppCompatActivity {
         }
 
         @Override
-        protected Boolean doInBackground(String[] str) {
+        protected Boolean doInBackground(JSONObject[] job) {
 
             try {
-                URL url = new URL("http://min.esy.es/SignIn.php");                //url 지정
+                URL url = new URL("http://min.esy.es/CheckClient.php");                //url 지정
                //커넥션 오픈
                 HttpURLConnection huc = (HttpURLConnection) url.openConnection();
                 huc.setReadTimeout(10000 /*ms*/);
@@ -122,7 +130,7 @@ public class Test extends AppCompatActivity {
             /*서버로 값 전송 - Output Stream Writer*/
 
                 OutputStreamWriter osw = new OutputStreamWriter(huc.getOutputStream());
-                StringBuffer sbW = new StringBuffer(str[0].toString());
+                StringBuffer sbW = new StringBuffer(job[0].toString());
 
                 huc.connect();
                 osw.write(sbW.toString());
@@ -131,7 +139,7 @@ public class Test extends AppCompatActivity {
 
                 osw.flush();
 
-            /*서버로부터 받기 - Input Stream Reader
+            /*서버로부터 받기 - Input Stream Reader*/
                 int HttpResult = huc.getResponseCode();
                 if (HttpResult == HttpURLConnection.HTTP_OK) {
                     InputStreamReader isr = new InputStreamReader(huc.getInputStream());
@@ -145,11 +153,10 @@ public class Test extends AppCompatActivity {
 
                     String jsonStr = sbR.toString();
                     System.out.println(jsonStr);
-
                 }
                 else {
                     System.out.println(huc.getResponseMessage());
-                }*/
+                }
 
      /*통신 여부 확인 보내기 등등*/
                 huc.disconnect();

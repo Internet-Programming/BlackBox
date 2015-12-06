@@ -1,12 +1,7 @@
-package com.example.heemin.myapplication;
+package internetprogramming.blackbox;
 
-<<<<<<< HEAD
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-=======
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -14,42 +9,25 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import android.app.Activity;
->>>>>>> 0462df60dad497768ea8d78f6318f45484655d55
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.hardware.Camera;
+import android.hardware.Camera.PreviewCallback;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaRecorder;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
-<<<<<<< HEAD
-import android.widget.EditText;
 import android.widget.TextView;
-=======
->>>>>>> 0462df60dad497768ea8d78f6318f45484655d55
+import android.widget.Toast;
 import android.widget.VideoView;
-
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
-
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
-
 /*
 현재 진척상황 2015/12/05 23:03
 
@@ -94,11 +72,7 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
 
     public boolean SensorFlag=true;
     //--------------충격부 선언 End----------
-    //------------Send JSON-------------
-    String Num = new String();
-    private Button btnSend;
-    private EditText etMessgae;
-    //------------Send JSON-------------
+
     //-----------------타이머 부분 Start-------------------
     private TimerTask mTask;
     private Timer mTimer;
@@ -106,14 +80,7 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
     public String lastFileName2=null;
     public String lastFileName3=null;
     public boolean lastFlag = false;
-    //타이머용
-    private int value = 0;
-    private CountDownTimer timer;
-    private int multiplebyTotalRecSecond = 1000;
-    private int TotalRecSecond = 30;
-    //--------------타이머 부분 end=-================
-    //--------------파일 이름 부분 Start--------------
-    String saveName(String FileName){
+        String saveName(String FileName){
         if(lastFileName1 !=null){
             if(lastFileName2!=null){
                 lastFileName3=FileName;
@@ -137,9 +104,44 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
         else {
             lastFileName1 = FileName;
             Log.e("FILENAME","save 1st File"+lastFileName1);
-            return lastFileName1;
+           return lastFileName1;
         }
     }
+    //--------------타이머 부분 end=-================
+
+    //---------------비디오 부분 start---------------
+    @Override
+    protected void onPause() {
+        // TODO Auto-generated method stub
+        // on Pause 상태에서 카메라 ,레코더 객체를 정리한다
+        if (mCamera != null){
+            mCamera.release();
+            mCamera = null;
+        }
+        if (recorder != null){
+            recorder.stop();
+            recorder.release();
+            recorder = null;
+        }
+        super.onPause();
+    }
+    // Video View 객체
+    private VideoView mVideoView=null;
+    // 카메라 객체
+    private Camera mCamera;
+    // 레코더 객체 생성
+    private MediaRecorder recorder = null;
+    // 아웃풋 파일 경로
+    private String OUTPUT_FILE = "/sdcard/camtest/";
+    // 녹화 시간 - 10초
+    private static final int RECORDING_TIME = 9900;
+
+    //타이머용
+    private int value = 0;
+    private CountDownTimer timer;
+    private int multiplebyTotalRecSecond = 1000;
+    private int TotalRecSecond = 30;
+
 
     private String createName(long dateTaken){
 
@@ -152,24 +154,8 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
         return saveName(dateFormat.format(date)+".mp4");
 
     }
-    //--------------파일 이름 부분 End--------------
-
-    //---------------비디오 부분 start---------------
-
-    // Video View 객체
-    private SurfaceView mVideoView=null;
-    // 카메라 객체
-    private Camera mCamera;
-    // 레코더 객체 생성
-    private MediaRecorder recorder = null;
-    // 아웃풋 파일 경로
-    private String OUTPUT_FILE = "/sdcard/camtest/";
-    // 녹화 시간 - 9.9sec
-    private static final int RECORDING_TIME = 9900;
     // 카메라 프리뷰를 설정한다
-
     private void setCameraPreview(SurfaceHolder holder){
-        Camera mCamera=null;
         try {
             // 카메라 객체를 만든다
             mCamera = Camera.open();
@@ -232,7 +218,7 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
     private void setPreview()
     {
         // 1) 레이아웃의 videoView 를 멤버 변수에 매핑한다
-        mVideoView = (SurfaceView) findViewById(R.id.surfaceView);
+        mVideoView = (VideoView) findViewById(R.id.videoView);
         // 2) surface holder 변수를 만들고 videoView로부터 인스턴스를 얻어온다
         final SurfaceHolder holder = mVideoView.getHolder();
         // 3)표면의 변화를 통지받을 콜백 객체를 등록한다
@@ -241,28 +227,12 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
         holder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 
     }
-
-    @Override
-    protected void onPause() {
-        // TODO Auto-generated method stub
-        // on Pause 상태에서 카메라 ,레코더 객체를 정리한다
-        if (mCamera != null){
-            mCamera.release();
-            mCamera = null;
-        }
-        if (recorder != null){
-            recorder.stop();
-            recorder.release();
-            recorder = null;
-        }
-        super.onPause();
-    }
-
     private void setButtons()   {
+
         // Rec Start 버튼 콜백 설정
-        // Rec Start 동작 -> 타이머로 10초간격 촬영
         Button recStart = (Button)findViewById(R.id.startREC);
         recStart.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
@@ -271,14 +241,9 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
                 if (mVideoView.getHolder() == null) {
                     Log.e("CAM TEST", "View Error");
                 }
-                mTask= new TimerTask() {
-                    @Override
-                    public void run() {
-                        beginRecording(mVideoView.getHolder());
-                    }
-                };
-                mTimer = new Timer();
-                mTimer.schedule(mTask, 500, 10000);
+
+                beginRecording(mVideoView.getHolder());
+
             }
         });
         // Rec Stop 버튼 콜백 설정
@@ -291,17 +256,17 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
                 Log.e("CAM TEST", "Click RecStop");
 
 
-                mTimer.purge(); //타이머 정지시키고
-                mTimer.cancel();
-                mTimer = null;
-                //다음 10초 저장
-                lastFlag = true;
+                    mTimer.purge(); //타이머 정지시키고
+                    mTimer.cancel();
+                    mTimer=null;
+                    //다음 10초 저장
+                lastFlag=true;
 
                 beginRecording(mVideoView.getHolder());
                 Log.e("CAM TEST", "file names");
-                Log.e("CAM TEST", "1:" + lastFileName1);
-                Log.e("CAM TEST", "2:" + lastFileName2);
-                Log.e("CAM TEST", "3:" + lastFileName3);
+                Log.e("CAM TEST", "1:"+lastFileName1);
+                Log.e("CAM TEST", "2:"+lastFileName2);
+                Log.e("CAM TEST", "3:"+lastFileName3);
 
                 // 프리뷰가 없을 경우 다시 가동 시킨다
                 if (mCamera == null) {
@@ -315,24 +280,13 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
 
             }
         });
-
-        //-------------입력 다이얼로그 Start----------
-        Button carNumber = (Button)findViewById(R.id.CarNumber);
-        carNumber.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-            }
-        });
-        //-------------입력 다이얼로그 End----------
     }
     private void beginRecording(final SurfaceHolder holder) {
         // 레코더 객체 초기화
         String tmpFileName = createName(System.currentTimeMillis());
         final String FILE_PATH=OUTPUT_FILE+tmpFileName;
         SimpleDateFormat formatter = new SimpleDateFormat ( "yyyy.MM.dd HH:mm:ss", Locale.KOREAN );
-        //Date currentTime = new Date ( 	);
+        //Date currentTime = new Date ( );
         //String dTime = formatter.format ( currentTime );
         //매 1초 마다 증가할 정수값
 
@@ -348,12 +302,16 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
         }
         // 파일 생성/초기화
         Log.e("CAM TEST", "#2 Create File");
+        File outFile = new File(FILE_PATH);
+        if (outFile.exists())
+        {
+            outFile.delete();
+        }
         Log.e("CAM TEST", "#3 Release Camera");
         if (mCamera != null){
             mCamera.stopPreview();
             mCamera.release();
-            mCamera = null;
-            mCamera=Camera.open();
+            mCamera=null;
 
             Log.e("CAM TEST", "#3 Release Camera  _---> OK!!!");
         }
@@ -361,16 +319,13 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
 
 
         try {
-            mCamera=Camera.open();
 
             recorder = new MediaRecorder();
 
+            recorder.setCamera(mCamera);
             recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
-
-
-
             recorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
             // 녹화 시간 한계 , 10초
@@ -400,36 +355,18 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_camera);
+
+
+
+        //SCREEN_ORIENTATION_LANDSCAPE - 가로화면 고정
+        //SCREEN_ORIENTATION_PORTRAIT - 세로화면 고정
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
         setPreview();
+
+
         setButtons();
-
-        // ----------차량번호 다이얼로그-----------
-    /*
-        AlertDialog.Builder alert;
-        alert = new AlertDialog.Builder(this);
-        alert.setTitle("차량 번호를 입력하세요");
-        //alert.setMessage("Plz, input yourname");
-        alert.create();
-
-        final EditText CarNumber = new EditText(this);
-        alert.setView(CarNumber);
-        alert.setPositiveButton("전송", new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int whichButton) {
-
-                Num = CarNumber.getText().toString();
-                Log.e("CAM TEST", "YourCarNum is :" + Num);
-            }
-
-        });
-        alert.show();
-        */
-        // ----------차량번호 다이얼로그-----------
-
-
-
         //------------------------------------------------------
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         accelerormeterSensor = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
@@ -438,18 +375,24 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
         }
         //----------------------------------------------------
 
+        mTask= new TimerTask() {
+            @Override
+            public void run() {
+                beginRecording(mVideoView.getHolder());
+            }
+        };
 
+        mTimer = new Timer();
+
+        mTimer.schedule(mTask, 500, 10000);
     }
-
-    //---------JSON 전송------------
-
     @Override
     protected void onDestroy() {
+        sensorManager.registerListener(this, accelerormeterSensor, SensorManager.SENSOR_DELAY_GAME);
         mTimer.cancel();
         mCamera.release();
         super.onDestroy();
     }
-
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -467,7 +410,6 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
                 if (speed > SHAKE_THRESHOLD && SensorFlag==true) { //이벤트 발생 부분
                     Log.e("CAM TEST", "Sensor Changed!");
                     SensorFlag=false;
-
 
                     mTimer.purge();
                     mTimer.cancel();
@@ -488,13 +430,11 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
                         setCameraPreview(mVideoView.getHolder());
                         // 프리뷰 재시작t
                         Log.e("CAM TEST", "Preview Restart2");
-                        mCamera.startPreview();
+                        //mCamera.startPreview();
                     }
                     Log.e("CAM TEST", "Preview Restart3");
 
                 }
-
-
                 lastX = event.values[DATA_X];
                 lastY = event.values[DATA_Y];
                 lastZ = event.values[DATA_Z];
@@ -508,11 +448,6 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
     public void onAccuracyChanged(Sensor sensor, int i) {
 
     }
-
-    private class DefaultHttpClient {
-    }
 }
-
-
 
 

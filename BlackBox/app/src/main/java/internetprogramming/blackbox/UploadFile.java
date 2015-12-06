@@ -70,8 +70,8 @@ public class UploadFile extends AsyncTask<String,String,String> {
                 conn.setRequestProperty("ENCTYPE", "multipart/form-data");
                 conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
                 conn.setRequestProperty("uploaded_file", fileName);
-                conn.setRequestProperty("Carnumber", Main.CARNUMBER);
-                System.out.println("업로드 id"+Main.CARNUMBER);
+                conn.setRequestProperty("Carnumber", Main.MYCARNUMBER);
+                System.out.println("업로드 id"+Main.MYCARNUMBER);
 
                 dos = new DataOutputStream(conn.getOutputStream());
 

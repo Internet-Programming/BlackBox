@@ -18,7 +18,6 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -32,7 +31,14 @@ public class Main extends AppCompatActivity {
     private Button btnSignUp;           //회원가입
     private Button btnSignIn;           //로그인
 
-    static String CARNUMBER;
+    static String MYCARNUMBER;
+    static String YOURCARNUMBER;
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopService(new Intent("SensorService"));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,11 +51,13 @@ public class Main extends AppCompatActivity {
         btnSignIn = (Button) findViewById(R.id.buttonSignIn); //로그인  버튼
         btnSignUp = (Button) findViewById(R.id.buttonSignUp); //회원가입 버튼
 
+        startService(new Intent("SensorService"));
+
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //intent it = new Intent(getApplicationContext(), SignIn.class);
-                try{
+                try {
                     JSONObject userInfo = new JSONObject();
 
                     userInfo.put("Num", inputVNumber.getText().toString());
@@ -61,42 +69,39 @@ public class Main extends AppCompatActivity {
                     SignTask st = new SignTask();
                     isSuccess = st.execute(userInfo).get();
 
-                    if(isSuccess){
+                    if (isSuccess) {
                         /*로그인 성공*/
                         System.out.println("Success");
 
                         /*BlackBox 폴더 생성*/
-                        String env = Environment.getExternalStorageDirectory().getAbsolutePath() ;
+                        String env = Environment.getExternalStorageDirectory().getAbsolutePath();
                         System.out.println(env);
 
-                        File dir = new File(env+"/BlackBox/");
-                        if(!dir.exists()){
+                        File dir = new File(env + "/BlackBox/");
+                        if (!dir.exists()) {
                             dir.mkdir();
-                        }
-                        else{
+                        } else {
                             System.out.println("the Directory Already Exists");
                         }
 
                         Intent cit = new Intent(getApplicationContext(), SignIn.class);
-                        CARNUMBER = userInfo.getString("Num");
+                        MYCARNUMBER = userInfo.getString("Num");
                         startActivity(cit);
                         finish();
-                    }
-                    else if(!isSuccess){
+                    } else if (!isSuccess) {
                         /*로그인 실패*/
 
                         AlertDialog.Builder alert = new AlertDialog.Builder(Main.this);
 
                         alert.setMessage("잘못된 회원 정보입니다.");
-                        alert.setPositiveButton("확인",null);
+                        alert.setPositiveButton("확인", null);
                         alert.show();
                         System.out.println("Failed");
                     }
 
-                }
-                catch(JSONException e){
+                } catch (JSONException e) {
                     e.printStackTrace();
-                }catch (InterruptedException e) {
+                } catch (InterruptedException e) {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
                     e.printStackTrace();
@@ -111,6 +116,8 @@ public class Main extends AppCompatActivity {
                 startActivity(it);
             }
         });
+
+
     }
 
     /*Subclass (ASYNCTASK) */

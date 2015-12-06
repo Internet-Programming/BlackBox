@@ -7,20 +7,18 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -71,10 +69,26 @@ public class Test extends AppCompatActivity {
                             value.put("Num", input.getText().toString());
                             // {"Num" : input.getText().toString() };
                             // Do something with value!
-                            OtherTask ot = new OtherTask();
+                            ClientCheckTask ot = new ClientCheckTask();
 
-                            ot.execute(value);
+                            boolean checkClient = ot.execute(value).get();
+                            if (checkClient == true) {
+                                JSONObject connectValue = new JSONObject();
+                                connectValue.put("MyNum", Main.MYCARNUMBER);
+                                Main.YOURCARNUMBER = input.getText().toString();
+                                connectValue.put("YourNum", Main.YOURCARNUMBER);
+
+                                ConnectClientTask connectClientTask = new ConnectClientTask();
+                                boolean connectClientResult = connectClientTask.execute(connectValue).get();
+
+                                Log.e("connect error", "고객끼리 연결 불가");
+                            }
+
                         } catch (JSONException e) {
+                            e.printStackTrace();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        } catch (ExecutionException e) {
                             e.printStackTrace();
                         }
 
@@ -93,7 +107,7 @@ public class Test extends AppCompatActivity {
 
 
     /*Subclass (ASYNCTASK) */
-    public class OtherTask extends AsyncTask<JSONObject,JSONObject,Boolean> {
+    public class ClientCheckTask extends AsyncTask<JSONObject,JSONObject,Boolean> {
 
         ProgressDialog dialog = new ProgressDialog(Test.this) ;
 
@@ -153,6 +167,16 @@ public class Test extends AppCompatActivity {
 
                     String jsonStr = sbR.toString();
                     System.out.println(jsonStr);
+
+                    JSONObject jsonObj = new JSONObject(jsonStr);
+
+
+                    if( jsonObj.getBoolean("result") == false ){
+                        return false;
+                    }
+                    else{
+                        return true;
+                    }
                 }
                 else {
                     System.out.println(huc.getResponseMessage());
@@ -163,12 +187,112 @@ public class Test extends AppCompatActivity {
 
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
 
             return null;
         }
 
          protected void onPostExecute(Boolean result) {
+            if(this.dialog != null && this.dialog.isShowing() ){
+                this.dialog.dismiss();
+            }
+            super.onPostExecute(result);
+
+        }
+    }
+
+
+    /*Subclass (ASYNCTASK) */
+    public class ConnectClientTask extends AsyncTask<JSONObject,JSONObject,Boolean> {
+
+        ProgressDialog dialog = new ProgressDialog(Test.this) ;
+
+
+        @Override
+        protected void onPreExecute() {
+
+            this.dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            this.dialog.setTitle("");
+            this.dialog.setMessage("서버와 통신 중입니다.");
+            this.dialog.setCancelable(false);
+
+            this.dialog.show();
+            super.onPreExecute();
+
+        }
+
+        @Override
+        protected Boolean doInBackground(JSONObject[] job) {
+
+            try {
+                URL url = new URL("http://min.esy.es/ConnectClient.php");                //url 지정
+                //커넥션 오픈
+                HttpURLConnection huc = (HttpURLConnection) url.openConnection();
+                huc.setReadTimeout(10000 /*ms*/);
+                huc.setConnectTimeout(15000 /*ms*/);
+                huc.setRequestProperty("Content-Type", "application/json");
+                huc.setRequestProperty("Accept", "application/json");
+                huc.setRequestProperty("Cache-Control", "no-cache");
+                huc.setRequestMethod("POST");//POST
+
+                huc.setDoOutput(true);
+                huc.setDoInput(true);
+            /*서버로 값 전송 - Output Stream Writer*/
+
+                OutputStreamWriter osw = new OutputStreamWriter(huc.getOutputStream());
+                StringBuffer sbW = new StringBuffer(job[0].toString());
+
+                huc.connect();
+                osw.write(sbW.toString());
+
+                System.out.println(sbW.toString());
+
+                osw.flush();
+
+            /*서버로부터 받기 - Input Stream Reader*/
+                int HttpResult = huc.getResponseCode();
+                if (HttpResult == HttpURLConnection.HTTP_OK) {
+                    InputStreamReader isr = new InputStreamReader(huc.getInputStream());
+                    StringBuffer sbR = new StringBuffer();
+                    BufferedReader br = new BufferedReader(isr);
+                    String line = null;
+                    while ((line = br.readLine()) != null) {
+                        sbR.append(line + "\n");
+                    }
+                    br.close();
+
+                    String jsonStr = sbR.toString();
+                    System.out.println(jsonStr);
+
+                    JSONObject jsonObj = new JSONObject(jsonStr);
+
+
+                    if( jsonObj.getBoolean("result") == false ){
+                        return false;
+                    }
+                    else{
+                        return true;
+                    }
+                }
+                else {
+                    System.out.println(huc.getResponseMessage());
+                }
+
+     /*통신 여부 확인 보내기 등등*/
+                huc.disconnect();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
+        protected void onPostExecute(Boolean result) {
             if(this.dialog != null && this.dialog.isShowing() ){
                 this.dialog.dismiss();
             }

@@ -81,7 +81,6 @@ public class Test extends AppCompatActivity {
                                 ConnectClientTask connectClientTask = new ConnectClientTask();
                                 boolean connectClientResult = connectClientTask.execute(connectValue).get();
 
-                                Log.e("connect error", "고객끼리 연결 불가");
                             }
 
                         } catch (JSONException e) {

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -14,6 +15,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -62,6 +64,19 @@ public class Main extends AppCompatActivity {
                     if(isSuccess){
                         /*로그인 성공*/
                         System.out.println("Success");
+
+                        /*BlackBox 폴더 생성*/
+                        String env = Environment.getExternalStorageDirectory().getAbsolutePath() ;
+                        System.out.println(env);
+
+                        File dir = new File(env+"/BlackBox/");
+                        if(!dir.exists()){
+                            dir.mkdir();
+                        }
+                        else{
+                            System.out.println("the Directory Already Exists");
+                        }
+
                         Intent cit = new Intent(getApplicationContext(), SignIn.class);
                         CARNUMBER = userInfo.getString("Num");
                         startActivity(cit);

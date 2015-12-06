@@ -322,7 +322,7 @@ public class Camera_EX extends Activity implements SurfaceHolder.Callback, Senso
 
             recorder = new MediaRecorder();
 
-
+            recorder.setCamera(mCamera);
             recorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);

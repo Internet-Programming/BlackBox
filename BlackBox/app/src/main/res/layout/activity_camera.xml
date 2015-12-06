@@ -12,18 +12,19 @@
         android:layout_height="fill_parent"
         android:layout_centerHorizontal="true"
         android:layout_alignParentTop="true"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:id="@+id/linearLayout">
 
-        <VideoView
-            android:layout_width="fill_parent"
-            android:layout_height="300px"
-            android:id="@+id/videoView"
-            android:layout_weight="0.63" />
+        <SurfaceView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/surfaceView"
+            android:layout_alignEnd="@+id/linearLayout"
+            android:layout_weight="0.88" />
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.53">
+            android:layout_height="wrap_content">
 
             <Button
                 android:layout_width="wrap_content"
@@ -41,4 +42,5 @@
         </FrameLayout>
 
     </LinearLayout>
+
 </RelativeLayout>

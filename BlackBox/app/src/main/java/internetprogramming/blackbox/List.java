@@ -26,7 +26,9 @@ import java.io.OutputStreamWriter;
 import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 
 
@@ -47,6 +49,9 @@ import java.util.concurrent.ExecutionException;
  */
 
 public class List extends AppCompatActivity {
+
+    JSONArray items;
+
     @Override
     public void onBackPressed(){
         Intent it = new Intent(getApplicationContext(), SignIn.class);
@@ -59,6 +64,7 @@ public class List extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
@@ -75,7 +81,7 @@ public class List extends AppCompatActivity {
             userInfo.put("Num", Main.CARNUMBER);
 
             ListTask lt = new ListTask();
-            JSONArray items =  lt.execute(userInfo).get(); //서버와 통신한 후 리스트를 불러온다.
+            items =  lt.execute(userInfo).get(); //서버와 통신한 후 리스트를 불러온다.
 
             /*리스트 항목을 리스트뷰에 add*/
             for(int i = 0;i < items.length(); i++){
@@ -102,13 +108,16 @@ public class List extends AppCompatActivity {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                System.out.println(position);
+                System.out.println("[ID]" + position);
 
-             /*
+
                 JSONObject downloadInfo = new JSONObject();
                 try {
                     downloadInfo.put("Num", Main.CARNUMBER);
-                    downloadInfo.put("URI", "Videos/test.mp4");
+                    downloadInfo.put("URI",items.getJSONObject(position).getString("URI"));
+
+                    System.out.println("[DI]" + downloadInfo.toString());
+
                     DownLoadFileTask  downloadTask = new DownLoadFileTask();
                     boolean isSucess = downloadTask.execute(downloadInfo).get();
                     System.out.println(isSucess);
@@ -118,7 +127,7 @@ public class List extends AppCompatActivity {
                     e.printStackTrace();
                 } catch (ExecutionException e) {
                     e.printStackTrace();
-                }*/
+                }
             }
         });
 
@@ -221,19 +230,19 @@ public class List extends AppCompatActivity {
     }
 
     /*Subclass (ASYNCTASK) */
-    public class DownLoadFileTask extends AsyncTask<JSONObject,JSONObject,Boolean> {
+    public class DownLoadFileTask extends AsyncTask<JSONObject,String,Boolean> {
 
-         ProgressDialog dialog = new ProgressDialog(List.this) ;
-
+         ProgressDialog dialog;
              @Override
              protected void onPreExecute() {
 
-                 this.dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-                 this.dialog.setTitle("");
-                 this.dialog.setMessage("다운로드 중입니다.");
-                 this.dialog.setCancelable(false);
+                 dialog = new ProgressDialog(List.this);
 
-                 this.dialog.show();
+                 dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                 dialog.setMessage("다운로드 중입니다.");
+
+                 dialog.show();
+
                  super.onPreExecute();
             }
 
@@ -275,15 +284,26 @@ public class List extends AppCompatActivity {
                    byte[] tempByte = new byte[len];
                    InputStream is = huc.getInputStream();
 
+                    String strNow = job[0].getString("URI");
+                    strNow = strNow.substring(7);
 
-                   ////min.mp4 대신 시간을 가져와 이름을 생성 2015_12_04_05:30:24.mp4 요렇게
-                   File file = new File(Environment.getExternalStorageDirectory()+"/BlackBox/min.mp4");
+                    System.out.println(strNow);
+
+                   //min.mp4 대신 시간을 가져와 이름을 생성 2015_12_04_05:30:24.mp4 요렇게
+                   File file = new File(Environment.getExternalStorageDirectory()+"/BlackBox/"+strNow);
                    FileOutputStream fos = new FileOutputStream(file);
 
+
+                   long total = 0;    //for Progressive
+
                    while (!((read = is.read(tempByte)) <= 0) ) {
+                          total += read;
+                          System.out.println(read);
+                          publishProgress(""+ (int) ((total*100)/ len));
                           fos.write(tempByte, 0, read);
                    }
 
+                    fos.flush();
                     fos.close();
                     is.close();
                    }
@@ -295,19 +315,31 @@ public class List extends AppCompatActivity {
                  return true;
              } catch (IOException e) {
                  e.printStackTrace();
+             }catch (JSONException e) {
+                 e.printStackTrace();
              }
               return null;
          }
 
-         protected void onProgressUpdate(JSONObject[] values) {
-               super.onProgressUpdate(values);
+         protected void onProgressUpdate(String... progress) {
+
+             if(progress[0].equals("progress")){
+                dialog.setProgress(Integer.parseInt(progress[1]));
+                dialog.setMessage(progress[2]);
+             }
+             else if(progress[0].equals("max")){
+                 dialog.setMax(Integer.parseInt(progress[1]));
+             }
+
+             super.onProgressUpdate(progress);
          }
 
          protected void onPostExecute(Boolean result) {
 
             if(this.dialog != null && this.dialog.isShowing() ){
-                 this.dialog.dismiss();
+                 //this.dialog.dismiss();
              }
+              System.out.println("Complete");
                super.onPostExecute(result);
 
          }

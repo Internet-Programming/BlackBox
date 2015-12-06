@@ -9,10 +9,14 @@
         android:layout_height="wrap_content"
 
         />
-    <VideoView android:id = "@+id/videoView"
-        android:layout_width ="fill_parent"
-        android:layout_height ="300px"
-        android:layout_weight="0.98" />
+
+    <SurfaceView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/surfaceView"
+        android:layout_gravity="center_horizontal"
+        android:layout_weight="0.91" />
+
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width ="fill_parent"
@@ -28,4 +32,5 @@
             android:layout_height="wrap_content"
             android:text = "Stop"/>
     </LinearLayout>
+
 </LinearLayout>

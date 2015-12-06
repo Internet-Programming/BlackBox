@@ -51,6 +51,11 @@
             android:name=".Test"
             android:screenOrientation="landscape" >
         </activity>
+        <activity
+            android:name=".Camera_EX"
+            android:screenOrientation="landscape">
+
+        </activity>
 
         <service android:name=".SensorService">
 

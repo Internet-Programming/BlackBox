@@ -61,6 +61,15 @@ public class Camera_EX extends Activity {
     SurfaceView surfaceView;
     SurfaceHolder holder;
 
+    public void onBackPressed(){
+        Intent it = new Intent(getApplicationContext(), Contents.class);
+
+        it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+        startActivity(it);
+        finish();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -371,7 +380,8 @@ public class Camera_EX extends Activity {
 
                                 Main.JSONDATA.put("Order","checkShock");
 
-                                startService(new Intent("SensorService"));
+
+                                startService(new Intent("SensorService").setPackage("internetprogramming.blackbox"));
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

@@ -17,6 +17,13 @@
     tools:context=".Main">
 
 
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/imageView"
+        android:src="@drawable/bgi1"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -26,7 +33,7 @@
         android:id="@+id/textView3"
         android:layout_gravity="center_horizontal"
         android:focusableInTouchMode="false"
-        android:textSize="50sp"
+        android:textSize="44sp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
@@ -39,7 +46,7 @@
         android:layout_gravity="center_horizontal"
         android:textSize="22sp"
         android:layout_below="@+id/textView3"
-        android:layout_alignParentStart="true" />
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="423dp"
@@ -47,11 +54,11 @@
         android:id="@+id/VehicleNumber"
         android:inputType="text"
         android:layout_gravity="center_horizontal"
-        android:layout_below="@+id/textView"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
 
-        android:imeOptions="flagNoExtractUi"/>
+        android:imeOptions="flagNoExtractUi"
+        android:layout_below="@+id/textView"
+        android:layout_alignStart="@+id/VehiclePassword"
+        android:layout_alignEnd="@+id/VehiclePassword" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -62,7 +69,7 @@
         android:layout_gravity="center_horizontal"
         android:textSize="22sp"
         android:layout_above="@+id/VehiclePassword"
-        android:layout_alignParentStart="true" />
+        android:layout_alignStart="@+id/textView" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -73,48 +80,30 @@
         android:layout_gravity="center_horizontal"
 
         android:imeOptions="flagNoExtractUi"
-        android:layout_above="@+id/buttonSignUp"
-        android:layout_alignParentStart="true"
-        android:layout_alignEnd="@+id/VehicleNumber" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/textSignUp"
-        android:id="@+id/buttonSignUp"
-        android:layout_gravity="center_horizontal"
-        android:textSize="18sp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/buttonSignIn"
-        android:text="@string/textSignIn"
-        android:layout_gravity="center_horizontal"
-        android:textSize="18sp"
-        android:layout_alignTop="@+id/buttonSignUp"
-        android:layout_alignEnd="@+id/VehiclePassword" />
-
-    <EditText
-        android:id="@+id/editMessage"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="16dp"
-        android:layout_weight="1.0"
-        android:inputType="textShortMessage"
-        android:text="dsfsf" />
+        android:layout_above="@+id/btnSignIn"
+        android:layout_centerHorizontal="true" />
 
     <com.dd.processbutton.iml.SubmitProcessButton
-        android:id="@+id/btnSend"
+        android:id="@+id/btnSignIn"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         android:minWidth="100dp"
-        android:text="send"
+        android:text="@string/textSignIn"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        custom:pb_textComplete="@string/Done"
-        custom:pb_textProgress="@string/Loading" />
+        custom:pb_textComplete="완료"
+        custom:pb_textProgress="로그인 중입니다."
+        android:layout_above="@+id/btnSignUp"
+        android:layout_alignStart="@+id/VehiclePassword"
+        android:layout_alignEnd="@+id/VehiclePassword" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btnSignUp"
+        android:text="@string/textSignUp"
+        android:textSize="22sp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

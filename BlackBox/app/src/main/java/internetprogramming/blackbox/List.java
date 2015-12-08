@@ -1,6 +1,8 @@
 package internetprogramming.blackbox;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Environment;
@@ -27,34 +29,32 @@ import java.net.URL;
 import java.util.concurrent.ExecutionException;
 
 
-
-/*
-{
-    "result":true,
-    "data":{
-        "filelist":[
-            {"URI":"videos\/test4.mp4",
-            "filename":"test4.mp4"},
-            {"URI":"videos\/test.mp4",
-            "filename":"test.mp4"}
-         ],
-      "success":true
-   }
-}
- */
-
 public class List extends AppCompatActivity {
 
     JSONArray items;
 
     @Override
     public void onBackPressed(){
-        Intent it = new Intent(getApplicationContext(), SignIn.class);
 
-        it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        AlertDialog.Builder alert = new AlertDialog.Builder(List.this);
 
-        startActivity(it);
-        finish();
+        alert.setMessage("로그아웃 하시겠습니까?");
+        alert.setPositiveButton("예", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        Intent it = new Intent(getApplicationContext(), Main.class);
+
+                        it.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+                        startActivity(it);
+                        finish();
+                    }
+                }
+        );
+        alert.setNegativeButton("아니오",null);
+
+        alert.show();
+
     }
 
     @Override
@@ -114,8 +114,28 @@ public class List extends AppCompatActivity {
                     System.out.println("[DI]" + downloadInfo.toString());
 
                     DownLoadFileTask downloadTask = new DownLoadFileTask();
-                    boolean isSucess = downloadTask.execute(downloadInfo).get();
-                    System.out.println(isSucess);
+                    boolean isSuccess = downloadTask.execute(downloadInfo).get();
+
+                    AlertDialog.Builder alert = new AlertDialog.Builder(List.this);
+
+                    if(isSuccess){
+                        /*다운로드 성공*/
+                        alert.setMessage("다운로드에 성공하였습니다.");
+                        alert.setPositiveButton("확인",null);
+
+                        alert.show();
+
+                    }
+                    else if(!isSuccess){
+                        /*회원가입 실패*/
+                        alert.setMessage("다운로드에 실패하였습니다.");
+                        alert.setPositiveButton("확인", null);
+
+                        alert.show();
+                    }
+
+                    System.out.println(isSuccess);
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (InterruptedException e) {
@@ -332,7 +352,7 @@ public class List extends AppCompatActivity {
          protected void onPostExecute(Boolean result) {
 
             if(this.dialog != null && this.dialog.isShowing() ){
-                 //this.dialog.dismiss();
+                 this.dialog.dismiss();
              }
               System.out.println("Complete");
                super.onPostExecute(result);

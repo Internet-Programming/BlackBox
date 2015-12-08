@@ -8,8 +8,8 @@ import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.dd.processbutton.iml.SubmitProcessButton;
 
@@ -32,8 +32,8 @@ public class Main extends AppCompatActivity  implements ProgressGenerator.OnComp
     private EditText inputVNumber;      //차량번호
     private EditText inputVPassword;    //비밀번호
 
-    private Button btnSignUp;           //회원가입
-    private Button btnSignIn;           //로그인
+    private TextView btnSignUp;           //회원가입
+    private SubmitProcessButton btnSignIn;           //로그인
 
     static String MYCARNUMBER;
     static String YOURCARNUMBER;
@@ -56,28 +56,13 @@ public class Main extends AppCompatActivity  implements ProgressGenerator.OnComp
         inputVNumber = (EditText) findViewById(R.id.VehicleNumber);
         inputVPassword = (EditText) findViewById(R.id.VehiclePassword);
 
-        btnSignIn = (Button) findViewById(R.id.buttonSignIn); //로그인  버튼
-        btnSignUp = (Button) findViewById(R.id.buttonSignUp); //회원가입 버튼
-
-        final EditText editMessage = (EditText) findViewById(R.id.editMessage);
-
-        final ProgressGenerator progressGenerator = new ProgressGenerator(this);
-        final SubmitProcessButton btnSend = (SubmitProcessButton) findViewById(R.id.btnSend);
-        btnSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressGenerator.start(btnSend);
-                btnSend.setEnabled(false);
-                editMessage.setEnabled(false);
-            }
-        });
-
-
+        btnSignIn = (SubmitProcessButton) findViewById(R.id.btnSignIn); //로그인  버튼
+        btnSignUp = (TextView) findViewById(R.id.btnSignUp); //회원가입 버튼
 
         btnSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //intent it = new Intent(getApplicationContext(), SignIn.class);
+                btnSignIn.setProgress(0);
                 try {
                     JSONObject userInfo = new JSONObject();
 
@@ -105,10 +90,11 @@ public class Main extends AppCompatActivity  implements ProgressGenerator.OnComp
                             System.out.println("the Directory Already Exists");
                         }
 
-                        Intent cit = new Intent(getApplicationContext(), SignIn.class);
+                        Intent cit = new Intent(getApplicationContext(), Contents.class);
                         MYCARNUMBER = userInfo.getString("Num");
                         startActivity(cit);
                         finish();
+                        btnSignIn.setProgress(100);
                     } else if (!isSuccess) {
                         /*로그인 실패*/
 
@@ -117,6 +103,7 @@ public class Main extends AppCompatActivity  implements ProgressGenerator.OnComp
                         alert.setMessage("잘못된 회원 정보입니다.");
                         alert.setPositiveButton("확인", null);
                         alert.show();
+                        btnSignIn.setProgress(0);
                         System.out.println("Failed");
                     }
 

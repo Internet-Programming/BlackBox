@@ -11,6 +11,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.dd.processbutton.iml.SubmitProcessButton;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +31,8 @@ public class SignUp extends AppCompatActivity {
 
     private EditText inputVNumber;      //차량번호
     private EditText inputVPassword;    //비밀번호
+
+    private SubmitProcessButton btnRequest;
 
     public JSONObject userInfo = new JSONObject();
 
@@ -50,13 +54,14 @@ public class SignUp extends AppCompatActivity {
         inputVNumber = (EditText) findViewById(R.id.VehicleNumber);
         inputVPassword = (EditText) findViewById(R.id.VehiclePassword);
 
-        Button btnRequest = (Button) findViewById(R.id.buttonRequest);
+        btnRequest = (SubmitProcessButton) findViewById(R.id.btnRequest);
 
 
         btnRequest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 try {
+                    btnRequest.setProgress(0);
                     userInfo.put("Num", inputVNumber.getText().toString());
                     userInfo.put("PW", inputVPassword.getText().toString());
 
@@ -76,6 +81,7 @@ public class SignUp extends AppCompatActivity {
                         alert.setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         finish();
+                                        btnRequest.setProgress(100);
                                     }
                                 }
                         );
@@ -90,6 +96,7 @@ public class SignUp extends AppCompatActivity {
 
                         alert.show();
                         System.out.println("Failed");
+                        btnRequest.setProgress(0);
                     }
 
                 } catch (JSONException e) {

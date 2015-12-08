@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="blue_pressed">#ff0099cc</color>
-    <color name="blue_normal">#ff33b5e5</color>
-    <color name="green_complete">#ff99cc00</color>
-    <color name="purple_progress">#ffaa66cc</color>
+    <color name="blue_pressed">#ff202774</color>
+    <color name="blue_normal">#ff262c80</color>
+    <color name="green_complete">#ff111100</color>
+    <color name="purple_progress">#ff111100</color>
     <color name="red_error">#ffff4444</color>
 
     <color name="holo_blue_bright">#ff00ddff</color>

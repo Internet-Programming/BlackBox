@@ -48,7 +48,7 @@
             android:screenOrientation="landscape" >
         </activity>
         <activity
-            android:name=".Test"
+            android:name=".Contents"
             android:screenOrientation="landscape" >
         </activity>
         <activity
